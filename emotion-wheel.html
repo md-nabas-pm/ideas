@@ -1,0 +1,1313 @@
+<!DOCTYPE html><html lang="en" style=""><svg class="inline-defs-container" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"></svg><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EmotionWheel Component - Behavioral Health UI</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            stone: {
+              25: '#FCFCFB',
+              50: '#F9F9F8',
+              100: '#F3F3F1',
+              200: '#E6E6E3',
+              300: '#D5D5D0',
+              600: '#575653',
+              800: '#292826',
+              900: '#1C1B1A',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @media (prefers-reduced-motion: reduce) {
+      *, ::before, ::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+    
+    .wheel-wedge {
+      transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1), 
+                  opacity 0.24s ease, 
+                  filter 0.24s ease,
+                  stroke-width 0.2s ease;
+      cursor: pointer;
+      outline: none;
+    }
+    .wheel-wedge:focus-visible {
+      filter: brightness(0.95);
+      stroke: #292826;
+      stroke-width: 2.5px;
+    }
+    
+    .wheel-container {
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .fade-enter {
+      animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.96); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    
+    /* Code preview drawer styling */
+    .tab-active {
+      border-color: #292826;
+      color: #1C1B1A;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body class="bg-stone-50 text-stone-800 min-h-screen flex flex-col items-center justify-between p-4 sm:p-8 antialiased selection:bg-amber-100 selection:text-amber-900">
+
+  <!-- Top bar / Contextual library header -->
+  <header class="w-full max-w-5xl mx-auto flex items-center justify-between pb-6 border-b border-stone-200/70 mb-4 sm:mb-8">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-full bg-stone-900 flex items-center justify-center text-white">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+          <path d="M2 12h20"></path>
+        </svg>
+      </div>
+      <div>
+        
+        <h1 class="text-sm font-semibold text-stone-900 leading-tight">&lt;EmotionWheel /&gt; Component</h1>
+      </div>
+    </div>
+    
+    <div class="flex items-center gap-2">
+      <!-- Toggle Code/Doc Drawer -->
+      <button id="toggle-spec-btn" class="text-xs font-medium text-stone-600 hover:text-stone-900 px-3 py-1.5 rounded-lg border border-stone-200 bg-white hover:bg-stone-100 transition shadow-sm flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="16 18 22 12 16 6"></polyline>
+          <polyline points="8 6 2 12 8 18"></polyline>
+        </svg>
+        <span class="">API &amp; Hierarchy</span>
+      </button>
+      <a href="#reset" onclick="startOver(); return false;" class="text-xs font-medium text-stone-600 hover:text-stone-900 px-3 py-1.5 rounded-lg hover:bg-stone-200/50 transition">
+        Reset Demo
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Component Showcase Card -->
+  <main class="w-full max-w-xl mx-auto my-auto flex flex-col items-center">
+    
+    <div class="w-full bg-white rounded-3xl p-6 sm:p-10 shadow-[0_4px_30px_rgba(0,0,0,0.03),0_1px_3px_rgba(0,0,0,0.02)] border border-stone-200/80 relative overflow-hidden transition-all duration-300">
+      
+      <!-- Component Header -->
+      <div class="text-center max-w-sm mx-auto mb-6"><div class="flex items-center justify-between gap-2 mb-3">
+  <div class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-stone-600 tracking-wider uppercase bg-stone-100 px-2.5 py-1 rounded-full">
+    <span id="level-badge" class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+    <span id="level-text" class="">Level 1: Core Emotion</span>
+  </div>
+  <div class="inline-flex items-center gap-1 bg-stone-100 p-0.5 rounded-full border border-stone-200/70 text-[10px] font-medium text-stone-600 select-none" title="Set exploration depth" role="group" aria-label="Max Depth Exploration Mode">
+    <span class="text-[10px] text-stone-400 pl-1.5 pr-0.5 hidden sm:inline">Depth:</span>
+    <button id="depth-2-btn" type="button" onclick="setMaxDepthMode(2)" aria-label="Set max depth to 2 levels" class="w-6 h-6 rounded-full flex items-center justify-center transition-all duration-200 hover:text-stone-900 font-semibold text-stone-600">2L</button>
+    <button id="depth-3-btn" type="button" onclick="setMaxDepthMode(3)" aria-label="Set max depth to 3 levels" class="w-6 h-6 rounded-full flex items-center justify-center transition-all duration-200 font-bold bg-white text-stone-900 shadow-xs">3L</button>
+  </div>
+</div>
+<h2 id="main-heading" class="text-2xl sm:text-[28px] font-bold text-stone-900 tracking-tight">How are you feeling?</h2>
+<p id="sub-heading" class="text-xs sm:text-sm text-stone-600 mt-1 leading-relaxed">Choose an emotion that feels closest to how you feel right now.</p></div>
+
+      <!-- Navigation Bar (Previous & Start Over) -->
+      <div class="flex items-center justify-between h-8 mb-2 px-1 text-xs">
+        <button id="prev-btn" onclick="goPrevious()" class="items-center gap-1 font-medium text-stone-600 hover:text-stone-900 transition py-1 px-2 -ml-2 rounded-md hover:bg-stone-100 hidden">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+          <span class="">Previous</span>
+        </button>
+        <div class="flex-1"></div>
+        <button id="reset-btn" onclick="startOver()" class="items-center gap-1 font-medium text-stone-600 hover:text-stone-800 transition py-1 px-2 -mr-2 rounded-md hover:bg-stone-100 hidden">
+          <svg class="w-3 h-3 text-stone-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+            <path d="M3 3v5h5"></path>
+          </svg>
+          <span class="">Start Over</span>
+        </button>
+      </div>
+
+      <!-- Interactive Circular Wheel Area -->
+      <div class="relative flex items-center justify-center my-3 select-none">
+        <!-- SVG Interactive Wheel -->
+        <div id="wheel-wrapper" class="relative w-[340px] h-[340px] sm:w-[410px] sm:h-[410px] flex items-center justify-center">
+          <svg id="emotion-svg" class="w-full h-full transform transition-transform duration-500 ease-out" viewBox="-220 -220 440 440" aria-label="Emotion Picker Wheel" role="region" style="transform: rotate(0deg) scale(1);">
+            <defs>
+              <filter id="soft-shadow" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.06"></feDropShadow>
+              </filter>
+              <filter id="selected-glow" x="-30%" y="-30%" width="160%" height="160%">
+                <feDropShadow dx="0" dy="3" stdDeviation="5" flood-opacity="0.12"></feDropShadow>
+              </filter>
+            </defs>
+
+            <!-- Segments Container rendered by JS -->
+            <g id="wedges-group" class="wheel-container"><g class="wheel-wedge-group" role="button" tabindex="0" aria-label="Happy emotion"><path d="M 2.0524696867841468 -195.98925319564037 A 196 196 0 0 1 137.1340147406196 -140.03664520802948 L 57.37239392209596 -58.586759729889884 A 82 82 0 0 0 0.858686297532143 -81.99550388797199 Z" fill="#FFEAA7" stroke="#634A00" stroke-width="2.5" class="wheel-wedge" id="wedge-happy" filter="url(#selected-glow)" style="opacity: 1; transform: scale(1); transform-origin: 0px 0px; filter: url(&quot;#selected-glow&quot;);"></path><text x="51.662263369287125" y="-124.72373688902371" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="700" fill="#634A00" pointer-events="none" transform="rotate(22.5, 51.662263369287125, -124.72373688902371)">Happy</text></g><g class="wheel-wedge-group" role="button" tabindex="0" aria-label="Calm emotion"><path d="M 134.32086377096704 -131.5367080165127 A 188 188 0 0 1 187.9896918407163 -1.9686954138541906 L 81.99550388797199 -0.858686297532147 A 82 82 0 0 0 58.58675972988988 -57.372393922095966 Z" fill="#DCE7F8" stroke="#FFFFFF" stroke-width="1.5" class="wheel-wedge" id="wedge-calm" style="opacity: 1;"></path><text x="124.72373688902371" y="-51.66226336928712" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="600" fill="#1A3E6D" pointer-events="none" transform="rotate(67.5, 124.72373688902371, -51.66226336928712)">Calm</text></g><g class="wheel-wedge-group" role="button" tabindex="0" aria-label="Anxious emotion"><path d="M 187.9896918407163 1.9686954138541906 A 188 188 0 0 1 134.32086377096704 131.5367080165127 L 58.58675972988988 57.372393922095966 A 82 82 0 0 0 81.99550388797199 0.858686297532147 Z" fill="#E5DDF5" stroke="#FFFFFF" stroke-width="1.5" class="wheel-wedge" id="wedge-anxious" style="opacity: 1;"></path><text x="124.72373688902371" y="51.66226336928712" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="600" fill="#42286E" pointer-events="none" transform="rotate(292.5, 124.72373688902371, 51.66226336928712)">Anxious</text></g><g class="wheel-wedge-group" role="button" tabindex="0" aria-label="Sad emotion"><path d="M 131.53670801651273 134.320863770967 A 188 188 0 0 1 1.9686954138541815 187.9896918407163 L 0.858686297532143 81.99550388797199 A 82 82 0 0 0 57.37239392209597 58.58675972988987 Z" fill="#FAD2E1" stroke="#FFFFFF" stroke-width="1.5" class="wheel-wedge" id="wedge-sad" style="opacity: 1;"></path><text x="51.662263369287125" y="124.72373688902371" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="600" fill="#701937" pointer-events="none" transform="rotate(337.5, 51.662263369287125, 124.72373688902371)">Sad</text></g><g class="wheel-wedge-group" role="button" tabindex="0" aria-label="Angry emotion"><path d="M -1.9686954138542005 187.9896918407163 A 188 188 0 0 1 -131.53670801651273 134.320863770967 L -57.37239392209597 58.58675972988987 A 82 82 0 0 0 -0.8586862975321512 81.99550388797199 Z" fill="#FFD6BA" stroke="#FFFFFF" stroke-width="1.5" class="wheel-wedge" id="wedge-angry" style="opacity: 1;"></path><text x="-51.66226336928711" y="124.72373688902371" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="600" fill="#662E08" pointer-events="none" transform="rotate(382.5, -51.66226336928711, 124.72373688902371)">Angry</text></g><g class="wheel-wedge-group" role="button" tabindex="0" aria-label="Afraid emotion"><path d="M -134.32086377096698 131.53670801651273 A 188 188 0 0 1 -187.9896918407163 1.9686954138542767 L -81.99550388797199 0.8586862975321845 A 82 82 0 0 0 -58.586759729889856 57.37239392209598 Z" fill="#E2ECE9" stroke="#FFFFFF" stroke-width="1.5" class="wheel-wedge" id="wedge-afraid" style="opacity: 1; transform: scale(1); transform-origin: 0px 0px;"></path><text x="-124.72373688902371" y="51.66226336928714" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="600" fill="#21463E" pointer-events="none" transform="rotate(427.5, -124.72373688902371, 51.66226336928714)">Afraid</text></g><g class="wheel-wedge-group" role="button" tabindex="0" aria-label="Disgusted emotion"><path d="M -187.9896918407163 -1.9686954138542305 A 188 188 0 0 1 -134.3208637709671 -131.53670801651265 L -58.586759729889906 -57.372393922095945 A 82 82 0 0 0 -81.99550388797199 -0.8586862975321643 Z" fill="#D8E2DC" stroke="#FFFFFF" stroke-width="1.5" class="wheel-wedge" id="wedge-disgusted" style="transform: scale(1); transform-origin: 0px 0px; opacity: 1;"></path><text x="-124.72373688902374" y="-51.66226336928705" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="600" fill="#254433" pointer-events="none" transform="rotate(292.5, -124.72373688902374, -51.66226336928705)">Disgusted</text></g><g class="wheel-wedge-group" role="button" tabindex="0" aria-label="Surprised emotion"><path d="M -131.53670801651268 -134.32086377096707 A 188 188 0 0 1 -1.9686954138542883 -187.9896918407163 L -0.8586862975321895 -81.99550388797199 A 82 82 0 0 0 -57.37239392209596 -58.586759729889884 Z" fill="#FFF1C5" stroke="#FFFFFF" stroke-width="1.5" class="wheel-wedge" id="wedge-surprised" style="opacity: 1; transform: scale(1); transform-origin: 0px 0px;"></path><text x="-51.66226336928708" y="-124.72373688902373" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="600" fill="#695105" pointer-events="none" transform="rotate(337.5, -51.66226336928708, -124.72373688902373)">Surprised</text></g></g>
+
+            <!-- Inner Circle Hub (Center Button) -->
+            <g id="center-hub" class="cursor-pointer" onclick="handleCenterClick()" role="button" tabindex="0" aria-label="Wheel center action">
+              <circle cx="0" cy="0" r="76" fill="#FFFFFF" stroke="#E6E6E3" stroke-width="1.5" filter="url(#soft-shadow)" class="transition-all duration-200 hover:stroke-stone-400"></circle>
+              
+              <!-- Subtle decorative inner ring -->
+              <circle cx="0" cy="0" r="69" fill="none" stroke="#F3F3F1" stroke-width="1" stroke-dasharray="3 3"></circle>
+              
+              <!-- Center Text Content -->
+              <text id="center-title" x="0" y="-8" text-anchor="middle" font-size="12" font-weight="500" fill="#8C8B85" class="transition-all duration-200">Selected</text>
+              <text id="center-emotion" x="0" y="10" text-anchor="middle" font-size="16" font-weight="700" fill="#634A00" class="transition-all duration-200">Happy</text>
+              <g id="center-action-group" class="opacity-0 transition-opacity duration-200" style="opacity: 1;">
+                <rect x="-38" y="19" width="76" height="20" rx="10" fill="#F3F3F1" class="hover:fill-stone-200 transition-colors"></rect>
+                <text id="center-action-text" x="0" y="32" text-anchor="middle" font-size="10" font-weight="600" fill="#575653">Explore →</text>
+              </g>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Selection Breadcrumbs & Details -->
+      <div class="mt-4 pt-4 border-t border-stone-100 flex flex-col items-center">
+        <div class="text-[11px] font-medium text-stone-600 uppercase tracking-wider mb-1">Selected emotion</div>
+        <div id="breadcrumb-container" class="min-h-[28px] flex items-center justify-center gap-1.5 flex-wrap text-sm"><span class="px-2.5 py-1 rounded-full text-xs font-semibold flex items-center gap-1 transition-all bg-stone-900 text-white shadow-xs"><span class="w-2 h-2 rounded-full" style="background-color: rgb(255, 234, 167);"></span><span class="">Happy</span></span></div>
+      </div>
+
+      <!-- Primary Action -->
+      <div class="mt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div class="text-xs text-stone-600 flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5 text-stone-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+          <span id="hint-text" class="">Click an emotion to explore or select</span>
+        </div>
+
+        <button id="save-btn" onclick="saveEmotion()" class="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-stone-900 text-white font-medium text-sm transition-all duration-200 shadow-sm hover:shadow active:scale-[0.98] flex items-center justify-center gap-2 opacity-100 cursor-pointer">
+          <span class="">Save Emotion</span>
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Feedback Success Toast (Hidden initially) -->
+      <div id="toast" class="absolute inset-x-4 bottom-4 bg-stone-900 text-white p-4 rounded-2xl shadow-xl flex items-center justify-between transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none z-20">
+        <div class="flex items-center gap-3">
+          <div class="w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </div>
+          <div>
+            <div class="text-xs font-semibold">Emotion logged successfully</div>
+            <div id="toast-desc" class="text-[11px] text-stone-300">Anxious → Worried → Concerned</div>
+          </div>
+        </div>
+        <button onclick="dismissToast()" class="text-xs text-stone-400 hover:text-white px-2 py-1">Dismiss</button>
+      </div>
+
+    </div>
+
+    <!-- Keyboard & Accessibility helper -->
+    <div class="mt-4 text-center text-xs text-stone-600 flex items-center justify-center gap-4">
+      <span class="flex items-center gap-1">
+        <kbd class="px-1.5 py-0.5 bg-white border border-stone-200 rounded text-[10px] text-stone-600 font-mono shadow-xs">Tab</kbd> Navigate segments
+      </span>
+      <span class="flex items-center gap-1">
+        <kbd class="px-1.5 py-0.5 bg-white border border-stone-200 rounded text-[10px] text-stone-600 font-mono shadow-xs">Enter</kbd> Select / Drill down
+      </span>
+      <span class="flex items-center gap-1">
+        <kbd class="px-1.5 py-0.5 bg-white border border-stone-200 rounded text-[10px] text-stone-600 font-mono shadow-xs">Esc</kbd> Back
+      </span>
+    </div>
+  </main>
+
+  <!-- Developer API & Props Spec Modal/Drawer (Toggled via header button) -->
+  <div id="spec-modal" class="fixed inset-0 bg-stone-900/40 backdrop-blur-xs z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200">
+    <div class="bg-white max-w-2xl w-full rounded-2xl shadow-2xl border border-stone-200 max-h-[85vh] flex flex-col overflow-hidden">
+      <div class="p-5 border-b border-stone-100 flex items-center justify-between bg-stone-50">
+        <div>
+          <h3 class="font-bold text-stone-900 text-sm">EmotionWheel Component API Specification</h3>
+          <p class="text-xs text-stone-600">Open-source behavioral health UI library export</p>
+        </div>
+        <button id="close-spec-btn" class="p-1 rounded-lg text-stone-600 hover:text-stone-800 hover:bg-stone-200">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="p-6 overflow-y-auto space-y-6 text-xs text-stone-600">
+        <!-- Usage -->
+        <div>
+          <div class="font-semibold text-stone-900 mb-2">React / TypeScript Component Signature</div>
+          <pre class="bg-stone-900 text-stone-100 p-3.5 rounded-xl font-mono text-[11px] overflow-x-auto leading-relaxed"><code>&lt;EmotionWheel
+  emotions={emotionTree}
+  maxDepth={3}
+  selectedEmotion={selectedEmotion}
+  onSelect={(path) =&gt; console.log(path)}
+  onComplete={(emotion) =&gt; handleSave(emotion)}
+  readOnly={false}
+  wheelSize={420}
+/&gt;</code></pre>
+        </div>
+
+        <!-- Props Table -->
+        <div>
+          <div class="font-semibold text-stone-900 mb-2">Props Reference</div>
+          <div class="border border-stone-200 rounded-lg overflow-hidden">
+            <table class="w-full text-left border-collapse">
+              <thead class="bg-stone-50 text-[11px] font-semibold text-stone-600 border-b border-stone-200">
+                <tr>
+                  <th class="p-2.5">Prop</th>
+                  <th class="p-2.5">Type</th>
+                  <th class="p-2.5">Default</th>
+                  <th class="p-2.5">Description</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-stone-100 font-mono text-[11px]">
+                <tr>
+                  <td class="p-2.5 text-stone-900 font-semibold">emotions</td>
+                  <td class="p-2.5 text-amber-700">EmotionNode[]</td>
+                  <td class="p-2.5 text-stone-600">coreEmotionTree</td>
+                  <td class="p-2.5 font-sans text-stone-600">Hierarchical emotion tree data</td>
+                </tr>
+                <tr>
+                  <td class="p-2.5 text-stone-900 font-semibold">maxDepth</td>
+                  <td class="p-2.5 text-amber-700">number</td>
+                  <td class="p-2.5 text-stone-600">3</td>
+                  <td class="p-2.5 font-sans text-stone-600">Maximum nesting level (1 to 3)</td>
+                </tr>
+                <tr>
+                  <td class="p-2.5 text-stone-900 font-semibold">selectedEmotion</td>
+                  <td class="p-2.5 text-amber-700">string[] | null</td>
+                  <td class="p-2.5 text-stone-600">null</td>
+                  <td class="p-2.5 font-sans text-stone-600">Controlled selection path</td>
+                </tr>
+                <tr>
+                  <td class="p-2.5 text-stone-900 font-semibold">onSelect</td>
+                  <td class="p-2.5 text-amber-700">(path: EmotionPath) =&gt; void</td>
+                  <td class="p-2.5 text-stone-600">noop</td>
+                  <td class="p-2.5 font-sans text-stone-600">Fired when segment is tapped/explored</td>
+                </tr>
+                <tr>
+                  <td class="p-2.5 text-stone-900 font-semibold">onComplete</td>
+                  <td class="p-2.5 text-amber-700">(result: EmotionResult) =&gt; void</td>
+                  <td class="p-2.5 text-stone-600">noop</td>
+                  <td class="p-2.5 font-sans text-stone-600">Fired when "Save Emotion" is clicked</td>
+                </tr>
+                <tr>
+                  <td class="p-2.5 text-stone-900 font-semibold">readOnly</td>
+                  <td class="p-2.5 text-amber-700">boolean</td>
+                  <td class="p-2.5 text-stone-600">false</td>
+                  <td class="p-2.5 font-sans text-stone-600">Disables click interactions</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Design System tokens -->
+        <div>
+          <div class="font-semibold text-stone-900 mb-2">Harmonious Pastel Emotion Palette</div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <div class="p-2 rounded-lg border border-stone-200 flex items-center gap-2">
+              <span class="w-4 h-4 rounded-full bg-[#FFEAA7] border border-amber-300"></span>
+              <span class="">Happy (#FFEAA7)</span>
+            </div>
+            <div class="p-2 rounded-lg border border-stone-200 flex items-center gap-2">
+              <span class="w-4 h-4 rounded-full bg-[#DCE7F8] border border-blue-300"></span>
+              <span class="">Calm (#DCE7F8)</span>
+            </div>
+            <div class="p-2 rounded-lg border border-stone-200 flex items-center gap-2">
+              <span class="w-4 h-4 rounded-full bg-[#E5DDF5] border border-purple-300"></span>
+              <span class="">Anxious (#E5DDF5)</span>
+            </div>
+            <div class="p-2 rounded-lg border border-stone-200 flex items-center gap-2">
+              <span class="w-4 h-4 rounded-full bg-[#FAD2E1] border border-rose-300"></span>
+              <span class="">Sad (#FAD2E1)</span>
+            </div>
+            <div class="p-2 rounded-lg border border-stone-200 flex items-center gap-2">
+              <span class="w-4 h-4 rounded-full bg-[#FFD6BA] border border-orange-300"></span>
+              <span class="">Angry (#FFD6BA)</span>
+            </div>
+            <div class="p-2 rounded-lg border border-stone-200 flex items-center gap-2">
+              <span class="w-4 h-4 rounded-full bg-[#E2ECE9] border border-teal-300"></span>
+              <span class="">Afraid (#E2ECE9)</span>
+            </div>
+            <div class="p-2 rounded-lg border border-stone-200 flex items-center gap-2">
+              <span class="w-4 h-4 rounded-full bg-[#D8E2DC] border border-emerald-300"></span>
+              <span class="">Disgusted (#D8E2DC)</span>
+            </div>
+            <div class="p-2 rounded-lg border border-stone-200 flex items-center gap-2">
+              <span class="w-4 h-4 rounded-full bg-[#FFF1C5] border border-yellow-300"></span>
+              <span class="">Surprised (#FFF1C5)</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer / Component Attribution -->
+  <footer class="w-full max-w-5xl mx-auto pt-6 text-center text-xs text-stone-600">
+    <p class="">Aura Behavioral Health UI • Designed for respectful, exploratory emotional check-ins</p>
+  </footer>
+
+  <!-- Interactive JavaScript Logic -->
+  <script>
+    // Complete 3-level emotion taxonomy designed specifically for calm behavioral health check-ins
+    const emotionTree = [
+      {
+        id: 'happy',
+        name: 'Happy',
+        color: '#FFEAA7', // pastel warm yellow
+        stroke: '#F4D882',
+        textColor: '#634A00',
+        children: [
+          {
+            id: 'playful',
+            name: 'Playful',
+            color: '#FFF2C6',
+            stroke: '#F7DF94',
+            children: [
+              { id: 'aroused', name: 'Energized', color: '#FFF7D6' },
+              { id: 'cheeky', name: 'Curious', color: '#FFF7D6' }
+            ]
+          },
+          {
+            id: 'content',
+            name: 'Content',
+            color: '#FFEAA7',
+            stroke: '#F4D882',
+            children: [
+              { id: 'free', name: 'Fulfilled', color: '#FFF4C8' },
+              { id: 'peaceful', name: 'Joyful', color: '#FFF4C8' }
+            ]
+          },
+          {
+            id: 'interested',
+            name: 'Interested',
+            color: '#FFF3CD',
+            stroke: '#F2DCA0',
+            children: [
+              { id: 'engaged', name: 'Fascinated', color: '#FFF8DD' },
+              { id: 'inquisitive', name: 'Stimulated', color: '#FFF8DD' }
+            ]
+          },
+          {
+            id: 'proud',
+            name: 'Proud',
+            color: '#FFE599',
+            stroke: '#EBCB70',
+            children: [
+              { id: 'confident', name: 'Confident', color: '#FFF0B8' },
+              { id: 'esteemed', name: 'Appreciated', color: '#FFF0B8' }
+            ]
+          },
+          {
+            id: 'optimistic',
+            name: 'Optimistic',
+            color: '#FFEEB2',
+            stroke: '#F0D58C',
+            children: [
+              { id: 'hopeful', name: 'Hopeful', color: '#FFF5CA' },
+              { id: 'inspired', name: 'Inspired', color: '#FFF5CA' }
+            ]
+          },
+          {
+            id: 'grateful',
+            name: 'Grateful',
+            color: '#FFE8A3',
+            stroke: '#ECC974',
+            children: [
+              { id: 'tender', name: 'Touched', color: '#FFF3C2' },
+              { id: 'thankful', name: 'Blessed', color: '#FFF3C2' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'calm',
+        name: 'Calm',
+        color: '#DCE7F8', // pastel sky blue
+        stroke: '#B8D0F1',
+        textColor: '#1A3E6D',
+        children: [
+          {
+            id: 'serene',
+            name: 'Serene',
+            color: '#E8F1FC',
+            children: [
+              { id: 'tranquil', name: 'Tranquil', color: '#F1F6FE' },
+              { id: 'still', name: 'Still', color: '#F1F6FE' }
+            ]
+          },
+          {
+            id: 'grounded',
+            name: 'Grounded',
+            color: '#DCE7F8',
+            children: [
+              { id: 'balanced', name: 'Balanced', color: '#EBF2FC' },
+              { id: 'steady', name: 'Steady', color: '#EBF2FC' }
+            ]
+          },
+          {
+            id: 'relieved',
+            name: 'Relieved',
+            color: '#D0E1F7',
+            children: [
+              { id: 'unburdened', name: 'Unburdened', color: '#E4EFFC' },
+              { id: 'reassured', name: 'Comforted', color: '#E4EFFC' }
+            ]
+          },
+          {
+            id: 'relaxed',
+            name: 'Relaxed',
+            color: '#E3ECFA',
+            children: [
+              { id: 'mellow', name: 'Mellow', color: '#EFF5FE' },
+              { id: 'rested', name: 'Restful', color: '#EFF5FE' }
+            ]
+          },
+          {
+            id: 'patient',
+            name: 'Patient',
+            color: '#D7E5F9',
+            children: [
+              { id: 'accepting', name: 'Accepting', color: '#E9F1FC' },
+              { id: 'open', name: 'Open', color: '#E9F1FC' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'anxious',
+        name: 'Anxious',
+        color: '#E5DDF5', // soft lavender
+        stroke: '#C9BAE7',
+        textColor: '#42286E',
+        children: [
+          {
+            id: 'worried',
+            name: 'Worried',
+            color: '#EDE6F9',
+            children: [
+              { id: 'concerned', name: 'Concerned', color: '#F5F0FD' },
+              { id: 'apprehensive', name: 'Apprehensive', color: '#F5F0FD' },
+              { id: 'fretful', name: 'Fretful', color: '#F5F0FD' }
+            ]
+          },
+          {
+            id: 'nervous',
+            name: 'Nervous',
+            color: '#E5DDF5',
+            children: [
+              { id: 'jittery', name: 'Jittery', color: '#EFE9FA' },
+              { id: 'uneasy', name: 'Uneasy', color: '#EFE9FA' }
+            ]
+          },
+          {
+            id: 'overwhelmed',
+            name: 'Overwhelmed',
+            color: '#DDD2F2',
+            children: [
+              { id: 'flooded', name: 'Flooded', color: '#ECE4F8' },
+              { id: 'scattered', name: 'Scattered', color: '#ECE4F8' }
+            ]
+          },
+          {
+            id: 'restless',
+            name: 'Restless',
+            color: '#EAE3F7',
+            children: [
+              { id: 'fidgety', name: 'Fidgety', color: '#F4EFFC' },
+              { id: 'hypervigilant', name: 'On-Edge', color: '#F4EFFC' }
+            ]
+          },
+          {
+            id: 'insecure',
+            name: 'Insecure',
+            color: '#D7C9EF',
+            children: [
+              { id: 'doubtful', name: 'Doubtful', color: '#E9E0F6' },
+              { id: 'hesitant', name: 'Hesitant', color: '#E9E0F6' }
+            ]
+          },
+          {
+            id: 'dread',
+            name: 'Dread',
+            color: '#E2D7F3',
+            children: [
+              { id: 'foreboding', name: 'Foreboding', color: '#EFE7FA' },
+              { id: 'tense', name: 'Tense', color: '#EFE7FA' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'sad',
+        name: 'Sad',
+        color: '#FAD2E1', // gentle soft blush rose
+        stroke: '#F4AAC4',
+        textColor: '#701937',
+        children: [
+          {
+            id: 'lonely',
+            name: 'Lonely',
+            color: '#FBDEE9',
+            children: [
+              { id: 'isolated', name: 'Isolated', color: '#FEEDF3' },
+              { id: 'abandoned', name: 'Disconnected', color: '#FEEDF3' }
+            ]
+          },
+          {
+            id: 'vulnerable',
+            name: 'Vulnerable',
+            color: '#FAD2E1',
+            children: [
+              { id: 'fragile', name: 'Fragile', color: '#FCE4ED' },
+              { id: 'helpless', name: 'Sensitive', color: '#FCE4ED' }
+            ]
+          },
+          {
+            id: 'despair',
+            name: 'Despairing',
+            color: '#F7BED2',
+            children: [
+              { id: 'grief', name: 'Grieving', color: '#FBD4E3' },
+              { id: 'hopeless', name: 'Discouraged', color: '#FBD4E3' }
+            ]
+          },
+          {
+            id: 'guilty',
+            name: 'Guilty',
+            color: '#F9C9DA',
+            children: [
+              { id: 'remorseful', name: 'Remorseful', color: '#FDDEE9' },
+              { id: 'ashamed', name: 'Self-Blaming', color: '#FDDEE9' }
+            ]
+          },
+          {
+            id: 'fatigued',
+            name: 'Drained',
+            color: '#FBE1EC',
+            children: [
+              { id: 'depleted', name: 'Depleted', color: '#FFF0F5' },
+              { id: 'weary', name: 'Weary', color: '#FFF0F5' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'angry',
+        name: 'Angry',
+        color: '#FFD6BA', // soft peach/terracotta
+        stroke: '#F7B78D',
+        textColor: '#662E08',
+        children: [
+          {
+            id: 'frustrated',
+            name: 'Frustrated',
+            color: '#FFE2CD',
+            children: [
+              { id: 'exasperated', name: 'Exasperated', color: '#FFF0E4' },
+              { id: 'irritated', name: 'Irritated', color: '#FFF0E4' }
+            ]
+          },
+          {
+            id: 'annoyed',
+            name: 'Annoyed',
+            color: '#FFD6BA',
+            children: [
+              { id: 'impatient', name: 'Impatient', color: '#FFE9DC' },
+              { id: 'bothered', name: 'Bothered', color: '#FFE9DC' }
+            ]
+          },
+          {
+            id: 'critical',
+            name: 'Critical',
+            color: '#FFC8A3',
+            children: [
+              { id: 'judgmental', name: 'Resentful', color: '#FFDFCB' },
+              { id: 'dismissive', name: 'Bitter', color: '#FFDFCB' }
+            ]
+          },
+          {
+            id: 'protective',
+            name: 'Protective',
+            color: '#FFDECB',
+            children: [
+              { id: 'defensive', name: 'Defensive', color: '#FFF2EB' },
+              { id: 'guarded', name: 'Guarded', color: '#FFF2EB' }
+            ]
+          },
+          {
+            id: 'furious',
+            name: 'Furious',
+            color: '#FFBFA0',
+            children: [
+              { id: 'enraged', name: 'Seething', color: '#FFD7C4' },
+              { id: 'outraged', name: 'Outraged', color: '#FFD7C4' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'afraid',
+        name: 'Afraid',
+        color: '#E2ECE9', // gentle sage mist
+        stroke: '#BFD7D1',
+        textColor: '#21463E',
+        children: [
+          {
+            id: 'scared',
+            name: 'Scared',
+            color: '#EBF3F1',
+            children: [
+              { id: 'terrified', name: 'Shaken', color: '#F5FAF9' },
+              { id: 'panicked', name: 'Alarmed', color: '#F5FAF9' }
+            ]
+          },
+          {
+            id: 'threatened',
+            name: 'Threatened',
+            color: '#E2ECE9',
+            children: [
+              { id: 'nervy', name: 'Exposed', color: '#EDF5F3' },
+              { id: 'vulnerable2', name: 'Unsafe', color: '#EDF5F3' }
+            ]
+          },
+          {
+            id: 'uncertain',
+            name: 'Uncertain',
+            color: '#D4E4E0',
+            children: [
+              { id: 'ambivalent', name: 'Conflicted', color: '#E4EFEA' },
+              { id: 'lost', name: 'Disoriented', color: '#E4EFEA' }
+            ]
+          },
+          {
+            id: 'timid',
+            name: 'Timid',
+            color: '#E7F0EE',
+            children: [
+              { id: 'shy', name: 'Cautious', color: '#F3F8F7' },
+              { id: 'withdrawn', name: 'Hesitant', color: '#F3F8F7' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'disgusted',
+        name: 'Disgusted',
+        color: '#D8E2DC', // dusty pastel eucalyptus
+        stroke: '#B8CAC0',
+        textColor: '#254433',
+        children: [
+          {
+            id: 'disapproving',
+            name: 'Disapproving',
+            color: '#E4ECE7',
+            children: [
+              { id: 'disappointed', name: 'Disappointed', color: '#F0F6F3' },
+              { id: 'appalled', name: 'Dismayed', color: '#F0F6F3' }
+            ]
+          },
+          {
+            id: 'aversion',
+            name: 'Aversion',
+            color: '#D8E2DC',
+            children: [
+              { id: 'repelled', name: 'Repelled', color: '#E9F0EC' },
+              { id: 'revolted', name: 'Sickened', color: '#E9F0EC' }
+            ]
+          },
+          {
+            id: 'uncomfortable',
+            name: 'Uncomfortable',
+            color: '#CBD8D0',
+            children: [
+              { id: 'uneasy_disgust', name: 'Awkward', color: '#DFE9E3' },
+              { id: 'disturbed', name: 'Disturbed', color: '#DFE9E3' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'surprised',
+        name: 'Surprised',
+        color: '#FFF1C5', // soft buttercup
+        stroke: '#F7DF94',
+        textColor: '#695105',
+        children: [
+          {
+            id: 'amazed',
+            name: 'Amazed',
+            color: '#FFF6D8',
+            children: [
+              { id: 'astonished', name: 'Astonished', color: '#FFFAEC' },
+              { id: 'in_awe', name: 'Awestruck', color: '#FFFAEC' }
+            ]
+          },
+          {
+            id: 'confused',
+            name: 'Perplexed',
+            color: '#FFF1C5',
+            children: [
+              { id: 'disillusioned', name: 'Puzzled', color: '#FFF6D4' },
+              { id: 'startled', name: 'Startled', color: '#FFF6D4' }
+            ]
+          },
+          {
+            id: 'moved',
+            name: 'Moved',
+            color: '#FFEAA7',
+            children: [
+              { id: 'touched_s', name: 'Stunned', color: '#FFF4CD' },
+              { id: 'speechless', name: 'Speechless', color: '#FFF4CD' }
+            ]
+          }
+        ]
+      }
+    ];
+
+    // State management
+    let navigationPath = []; // Array of EmotionNode objects representing hierarchy path: [Level1, Level2, Level3]
+    let hoveredEmotion = null;
+    let selectedTerminalEmotion = null; // currently selected emotion object for saving
+
+    const innerRadius = 82;
+    const outerRadius = 188;
+    const maxRadius = 196;
+
+    // DOM Elements
+    const wedgesGroup = document.getElementById('wedges-group');
+    const centerTitle = document.getElementById('center-title');
+    const centerEmotion = document.getElementById('center-emotion');
+    const centerActionGroup = document.getElementById('center-action-group');
+    const centerActionText = document.getElementById('center-action-text');
+    const breadcrumbContainer = document.getElementById('breadcrumb-container');
+    const prevBtn = document.getElementById('prev-btn');
+    const resetBtn = document.getElementById('reset-btn');
+    const saveBtn = document.getElementById('save-btn');
+    const hintText = document.getElementById('hint-text');
+    const levelBadge = document.getElementById('level-badge');
+    const levelText = document.getElementById('level-text');
+    const mainHeading = document.getElementById('main-heading');
+    const subHeading = document.getElementById('sub-heading');
+    const toast = document.getElementById('toast');
+    const toastDesc = document.getElementById('toast-desc');
+
+    // Math helper: polar to cartesian coordinate
+    function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
+      const angleInRadians = ((angleInDegrees - 90) * Math.PI) / 180.0;
+      return {
+        x: centerX + radius * Math.cos(angleInRadians),
+        y: centerY + radius * Math.sin(angleInRadians)
+      };
+    }
+
+    // SVG arc path generator
+    function describeArc(x, y, innerR, outerR, startAngle, endAngle) {
+      // Gap spacing between segments for modern, calm look
+      const gapAngle = 1.2;
+      const actualStart = startAngle + gapAngle / 2;
+      const actualEnd = endAngle - gapAngle / 2;
+
+      const p1 = polarToCartesian(x, y, outerR, actualStart);
+      const p2 = polarToCartesian(x, y, outerR, actualEnd);
+      const p3 = polarToCartesian(x, y, innerR, actualEnd);
+      const p4 = polarToCartesian(x, y, innerR, actualStart);
+
+      const largeArcFlag = actualEnd - actualStart <= 180 ? '0' : '1';
+
+      return [
+        `M ${p1.x} ${p1.y}`,
+        `A ${outerR} ${outerR} 0 ${largeArcFlag} 1 ${p2.x} ${p2.y}`,
+        `L ${p3.x} ${p3.y}`,
+        `A ${innerR} ${innerR} 0 ${largeArcFlag} 0 ${p4.x} ${p4.y}`,
+        'Z'
+      ].join(' ');
+    }
+
+    // Get current items to display on wheel based on navigationPath
+    function getCurrentWedges() {
+      if (navigationPath.length === 0) {
+        return emotionTree;
+      }
+      const parent = navigationPath[navigationPath.length - 1];
+      return parent.children || [];
+    }
+
+    // Render the SVG Wheel Segments
+    function renderWheel(direction = 0) {
+      wedgesGroup.innerHTML = '';
+      const items = getCurrentWedges();
+      const count = items.length;
+      const angleStep = 360 / count;
+
+      // Update level headings & text
+      const currentDepth = navigationPath.length + 1;
+      updateHeaderAndNav(currentDepth);
+
+      items.forEach((item, index) => {
+        const startAngle = index * angleStep;
+        const endAngle = (index + 1) * angleStep;
+        const midAngle = startAngle + angleStep / 2;
+
+        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        g.setAttribute('class', 'wheel-wedge-group');
+        g.setAttribute('role', 'button');
+        g.setAttribute('tabindex', '0');
+        g.setAttribute('aria-label', `${item.name} emotion`);
+
+        // Check if this item is currently selected in path
+        const isSelected = selectedTerminalEmotion && selectedTerminalEmotion.name === item.name;
+
+        // Path segment
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        const d = describeArc(0, 0, innerRadius, isSelected ? maxRadius : outerRadius, startAngle, endAngle);
+        path.setAttribute('d', d);
+        
+        // Color derivation
+        let fillColor = item.color || '#EAEAE7';
+        let strokeColor = item.stroke || '#D5D5D0';
+        let textColor = item.textColor || '#292826';
+        
+        // If nested, inherit harmonious parent family accent
+        if (navigationPath.length > 0) {
+          const rootAncestor = navigationPath[0];
+          strokeColor = rootAncestor.stroke || '#C9BAE7';
+          textColor = rootAncestor.textColor || '#292826';
+        }
+
+        path.setAttribute('fill', fillColor);
+        path.setAttribute('stroke', isSelected ? textColor : '#FFFFFF');
+        path.setAttribute('stroke-width', isSelected ? '2.5' : '1.5');
+        path.setAttribute('class', 'wheel-wedge');
+        path.setAttribute('id', `wedge-${item.id}`);
+
+        if (isSelected) {
+          path.setAttribute('filter', 'url(#selected-glow)');
+        }
+
+        // Label position
+        const textRadius = (innerRadius + outerRadius) / 2;
+        const textPos = polarToCartesian(0, 0, textRadius, midAngle);
+
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', textPos.x);
+        text.setAttribute('y', textPos.y);
+        text.setAttribute('text-anchor', 'middle');
+        text.setAttribute('dominant-baseline', 'central');
+        text.setAttribute('font-size', count > 7 ? '11' : '12');
+        text.setAttribute('font-weight', isSelected ? '700' : '600');
+        text.setAttribute('fill', textColor);
+        text.setAttribute('pointer-events', 'none');
+        text.textContent = item.name;
+
+        // Rotate text slightly along the radius if many items, or keep upright for readability
+        let rot = midAngle;
+        if (rot > 90 && rot < 270) {
+          rot = rot + 180;
+        }
+        text.setAttribute('transform', `rotate(${rot - (rot > 90 && rot < 270 ? 180 : 0)}, ${textPos.x}, ${textPos.y})`);
+
+        // Event Listeners for Interaction
+        g.addEventListener('mouseenter', () => handleHover(item, path, text, isSelected));
+        g.addEventListener('mouseleave', () => handleLeave(item, path, text, isSelected));
+        g.addEventListener('click', () => handleSelectWedge(item));
+        g.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleSelectWedge(item);
+          }
+        });
+
+        g.appendChild(path);
+        g.appendChild(text);
+        wedgesGroup.appendChild(g);
+      });
+
+      // Update Center Hub state
+      updateCenterHub();
+    }
+
+    // Header & Navigation Breadcrumb updates
+    function updateHeaderAndNav(currentDepth) {
+      if (currentDepth === 1) {
+        levelBadge.className = 'w-1.5 h-1.5 rounded-full bg-emerald-500';
+        levelText.textContent = 'Level 1: Core Emotion';
+        mainHeading.textContent = 'How are you feeling?';
+        subHeading.textContent = 'Choose an emotion that feels closest to how you feel right now.';
+        prevBtn.classList.add('hidden');
+        prevBtn.classList.remove('inline-flex');
+        resetBtn.classList.add('hidden');
+        resetBtn.classList.remove('inline-flex');
+        hintText.textContent = 'Click an emotion to explore or select';
+      } else if (currentDepth === 2) {
+        const parentName = navigationPath[0].name;
+        levelBadge.className = 'w-1.5 h-1.5 rounded-full bg-sky-500';
+        levelText.textContent = `Level 2: Exploring "${parentName}"`;
+        mainHeading.textContent = `Within ${parentName}...`;
+        subHeading.textContent = 'Which nuance captures your experience more closely?';
+        prevBtn.classList.remove('hidden');
+        prevBtn.classList.add('inline-flex');
+        resetBtn.classList.remove('hidden');
+        resetBtn.classList.add('inline-flex');
+        hintText.textContent = 'Click to delve deeper or select';
+      } else {
+        const root = navigationPath[0].name;
+        const sub = navigationPath[1].name;
+        levelBadge.className = 'w-1.5 h-1.5 rounded-full bg-indigo-500';
+        levelText.textContent = `Level 3: Specific Nuance`;
+        mainHeading.textContent = `Fine-tuning "${sub}"`;
+        subHeading.textContent = 'Select the specific feeling that fits best.';
+        prevBtn.classList.remove('hidden');
+        prevBtn.classList.add('inline-flex');
+        resetBtn.classList.remove('hidden');
+        resetBtn.classList.add('inline-flex');
+        hintText.textContent = 'Click to finalize your selection';
+      }
+
+      renderBreadcrumbs();
+    }
+
+    // Render breadcrumbs below wheel
+    function renderBreadcrumbs() {
+      breadcrumbContainer.innerHTML = '';
+
+      if (navigationPath.length === 0 && !selectedTerminalEmotion) {
+        breadcrumbContainer.innerHTML = '<span class="text-stone-400 italic text-xs">None selected yet</span>';
+        saveBtn.disabled = true;
+        saveBtn.classList.add('opacity-30', 'cursor-not-allowed');
+        saveBtn.classList.remove('opacity-100', 'cursor-pointer');
+        return;
+      }
+
+      // Compose full path
+      const fullPath = [...navigationPath];
+      if (selectedTerminalEmotion && !fullPath.find(e => e.name === selectedTerminalEmotion.name)) {
+        fullPath.push(selectedTerminalEmotion);
+      }
+
+      fullPath.forEach((item, idx) => {
+        if (idx > 0) {
+          const arrow = document.createElement('span');
+          arrow.className = 'text-stone-300 font-bold';
+          arrow.textContent = '→';
+          breadcrumbContainer.appendChild(arrow);
+        }
+
+        const tag = document.createElement('span');
+        const isLast = idx === fullPath.length - 1;
+        tag.className = `px-2.5 py-1 rounded-full text-xs font-semibold flex items-center gap-1 transition-all ${
+          isLast 
+            ? 'bg-stone-900 text-white shadow-xs' 
+            : 'bg-stone-100 text-stone-700 hover:bg-stone-200 cursor-pointer'
+        }`;
+        
+        // Color dot
+        const dot = document.createElement('span');
+        dot.className = 'w-2 h-2 rounded-full';
+        dot.style.backgroundColor = item.color || '#E5DDF5';
+        tag.appendChild(dot);
+
+        const nameSpan = document.createElement('span');
+        nameSpan.textContent = item.name;
+        tag.appendChild(nameSpan);
+
+        if (!isLast) {
+          tag.title = `Jump back to ${item.name}`;
+          tag.addEventListener('click', () => {
+            navigationPath = navigationPath.slice(0, idx + 1);
+            selectedTerminalEmotion = item;
+            renderWheel();
+          });
+        }
+
+        breadcrumbContainer.appendChild(tag);
+      });
+
+      // Enable Save Button
+      saveBtn.disabled = false;
+      saveBtn.classList.remove('opacity-30', 'cursor-not-allowed');
+      saveBtn.classList.add('opacity-100', 'cursor-pointer');
+    }
+
+    // Hover interactions
+    function handleHover(item, pathEl, textEl, isSelected) {
+      hoveredEmotion = item;
+      
+      // Enlarge wedge slightly and brighten
+      pathEl.style.transform = 'scale(1.025)';
+      pathEl.style.transformOrigin = '0px 0px';
+      pathEl.style.filter = 'drop-shadow(0 4px 6px rgba(0,0,0,0.08))';
+
+      // Gentle fade for other wedges
+      const allWedges = document.querySelectorAll('.wheel-wedge');
+      allWedges.forEach(w => {
+        if (w !== pathEl) {
+          w.style.opacity = '0.55';
+        }
+      });
+
+      // Update Center text on hover if nothing actively drilled down
+      centerTitle.textContent = item.children && item.children.length > 0 ? 'Click to explore' : 'Click to select';
+      centerTitle.setAttribute('fill', '#8C8B85');
+      centerEmotion.textContent = item.name;
+      centerEmotion.setAttribute('fill', item.textColor || '#1C1B1A');
+      
+      if (item.children && item.children.length > 0) {
+        centerActionGroup.style.opacity = '1';
+        centerActionText.textContent = 'Explore →';
+      } else {
+        centerActionGroup.style.opacity = '1';
+        centerActionText.textContent = 'Select ✓';
+      }
+    }
+
+    function handleLeave(item, pathEl, textEl, isSelected) {
+      hoveredEmotion = null;
+      pathEl.style.transform = 'scale(1)';
+      pathEl.style.filter = isSelected ? 'url(#selected-glow)' : '';
+
+      // Reset opacity of all wedges
+      const allWedges = document.querySelectorAll('.wheel-wedge');
+      allWedges.forEach(w => {
+        w.style.opacity = '1';
+      });
+
+      updateCenterHub();
+    }
+
+    // Center Hub display state
+    function updateCenterHub() {
+      if (selectedTerminalEmotion) {
+        centerTitle.textContent = navigationPath.length > 0 ? 'Current Selection' : 'Selected';
+        centerEmotion.textContent = selectedTerminalEmotion.name;
+        centerEmotion.setAttribute('fill', selectedTerminalEmotion.textColor || '#1C1B1A');
+        
+        if (selectedTerminalEmotion.children && selectedTerminalEmotion.children.length > 0) {
+          centerActionGroup.style.opacity = '1';
+          centerActionText.textContent = 'Explore →';
+        } else {
+          centerActionGroup.style.opacity = '0';
+        }
+      } else if (navigationPath.length > 0) {
+        const currentParent = navigationPath[navigationPath.length - 1];
+        centerTitle.textContent = 'Exploring';
+        centerEmotion.textContent = currentParent.name;
+        centerEmotion.setAttribute('fill', currentParent.textColor || '#1C1B1A');
+        centerActionGroup.style.opacity = '0';
+      } else {
+        centerTitle.textContent = 'Choose an emotion';
+        centerEmotion.textContent = '';
+        centerActionGroup.style.opacity = '0';
+      }
+    }
+
+    // Wedge Click Handler
+    function handleSelectWedge(item) {
+      selectedTerminalEmotion = item;
+
+      // Has deeper nuances (children) and depth < 3
+      if (item.children && item.children.length > 0 && navigationPath.length < 2) {
+        // Explore deeper
+        navigationPath.push(item);
+        
+        // Gentle wheel rotate animation
+        const svgEl = document.getElementById('emotion-svg');
+        svgEl.style.transform = 'rotate(-8deg) scale(0.96)';
+        setTimeout(() => {
+          renderWheel(1);
+          svgEl.style.transform = 'rotate(0deg) scale(1)';
+        }, 160);
+      } else {
+        // Terminal or leaf emotion reached
+        renderWheel();
+        renderBreadcrumbs();
+      }
+    }
+
+    // Center Click (Secondary action: Explore / Select)
+    function handleCenterClick() {
+      if (selectedTerminalEmotion && selectedTerminalEmotion.children && selectedTerminalEmotion.children.length > 0 && navigationPath.length < 2) {
+        navigationPath.push(selectedTerminalEmotion);
+        renderWheel();
+      } else if (navigationPath.length > 0) {
+        // If center clicked when exploring, go back one level
+        goPrevious();
+      }
+    }
+
+    // Navigation Actions
+    function goPrevious() {
+      if (navigationPath.length > 0) {
+        const popped = navigationPath.pop();
+        selectedTerminalEmotion = popped;
+        const svgEl = document.getElementById('emotion-svg');
+        svgEl.style.transform = 'rotate(8deg) scale(0.96)';
+        setTimeout(() => {
+          renderWheel(-1);
+          svgEl.style.transform = 'rotate(0deg) scale(1)';
+        }, 160);
+      }
+    }
+
+    function startOver() {
+      navigationPath = [];
+      selectedTerminalEmotion = null;
+      hoveredEmotion = null;
+      const svgEl = document.getElementById('emotion-svg');
+      svgEl.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        renderWheel();
+        renderBreadcrumbs();
+        svgEl.style.transform = 'scale(1)';
+      }, 140);
+    }
+
+    // Save Emotion Primary Action
+    function saveEmotion() {
+      if (!selectedTerminalEmotion) return;
+
+      const pathNames = [...navigationPath.map(e => e.name)];
+      if (!pathNames.includes(selectedTerminalEmotion.name)) {
+        pathNames.push(selectedTerminalEmotion.name);
+      }
+
+      const summary = pathNames.join(' → ');
+      toastDesc.textContent = summary;
+      
+      // Trigger toast
+      toast.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+      toast.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
+
+      // Auto dismiss after 4 seconds
+      setTimeout(() => {
+        dismissToast();
+      }, 4200);
+    }
+
+    function dismissToast() {
+      toast.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
+      toast.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
+    }
+
+    // Keyboard shortcuts
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (navigationPath.length > 0) {
+          goPrevious();
+        }
+      }
+    });
+
+    // API Modal Dialog
+    const specModal = document.getElementById('spec-modal');
+    const toggleSpecBtn = document.getElementById('toggle-spec-btn');
+    const closeSpecBtn = document.getElementById('close-spec-btn');
+
+    toggleSpecBtn.addEventListener('click', () => {
+      specModal.classList.remove('opacity-0', 'pointer-events-none');
+      specModal.classList.add('opacity-100', 'pointer-events-auto');
+    });
+
+    closeSpecBtn.addEventListener('click', () => {
+      specModal.classList.remove('opacity-100', 'pointer-events-auto');
+      specModal.classList.add('opacity-0', 'pointer-events-none');
+    });
+
+    specModal.addEventListener('click', (e) => {
+      if (e.target === specModal) {
+        specModal.classList.remove('opacity-100', 'pointer-events-auto');
+        specModal.classList.add('opacity-0', 'pointer-events-none');
+      }
+    });
+
+    // Initial Render
+    renderWheel();
+  </script>
+
+
+
+
+<script class="">
+  let maxDepthSetting = 3;
+
+  function setMaxDepthMode(depth) {
+    maxDepthSetting = depth;
+    const btn2 = document.getElementById('depth-2-btn');
+    const btn3 = document.getElementById('depth-3-btn');
+    
+    if (depth === 2) {
+      btn2.className = 'w-6 h-6 rounded-full flex items-center justify-center transition-all duration-200 font-bold bg-white text-stone-900 shadow-xs';
+      btn3.className = 'w-6 h-6 rounded-full flex items-center justify-center transition-all duration-200 hover:text-stone-900 font-semibold text-stone-600';
+      if (navigationPath.length >= 2) {
+        navigationPath = navigationPath.slice(0, 1);
+      }
+    } else {
+      btn3.className = 'w-6 h-6 rounded-full flex items-center justify-center transition-all duration-200 font-bold bg-white text-stone-900 shadow-xs';
+      btn2.className = 'w-6 h-6 rounded-full flex items-center justify-center transition-all duration-200 hover:text-stone-900 font-semibold text-stone-600';
+    }
+    
+    renderWheel();
+    renderBreadcrumbs();
+  }
+
+  // Enhance wedge selection to respect maxDepthSetting
+  const originalHandleSelectWedge = window.handleSelectWedge;
+  window.handleSelectWedge = function(item) {
+    selectedTerminalEmotion = item;
+    const maxAllowedNavDepth = maxDepthSetting - 1;
+    if (item.children && item.children.length > 0 && navigationPath.length < maxAllowedNavDepth) {
+      navigationPath.push(item);
+      const svgEl = document.getElementById('emotion-svg');
+      if (svgEl) {
+        svgEl.style.transform = 'rotate(-8deg) scale(0.96)';
+        setTimeout(() => {
+          renderWheel(1);
+          svgEl.style.transform = 'rotate(0deg) scale(1)';
+        }, 160);
+      } else {
+        renderWheel(1);
+      }
+    } else {
+      renderWheel();
+      renderBreadcrumbs();
+    }
+  };
+
+  // Enhance center click to respect maxDepthSetting
+  const originalHandleCenterClick = window.handleCenterClick;
+  window.handleCenterClick = function() {
+    const maxAllowedNavDepth = maxDepthSetting - 1;
+    if (selectedTerminalEmotion && selectedTerminalEmotion.children && selectedTerminalEmotion.children.length > 0 && navigationPath.length < maxAllowedNavDepth) {
+      navigationPath.push(selectedTerminalEmotion);
+      renderWheel();
+    } else if (navigationPath.length > 0) {
+      goPrevious();
+    }
+  };
+</script></body></html>
