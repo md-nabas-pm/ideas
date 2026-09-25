@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+
+<html lang="en" style=""><head></head><body class="bg-surface font-body-md text-on-surface antialiased overflow-x-hidden"><svg aria-hidden="true" class="inline-defs-container" style="position:absolute;width:0;height:0;overflow:hidden"></svg><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}
+.node-highlight { box-shadow: 0 0 0 3px #1F4E5B, 0 10px 25px -5px rgba(31, 78, 91, 0.3) !important; animation: clinicalPulse 2.2s infinite ease-in-out; }
+.node-dimmed { opacity: 0.22 !important; pointer-events: none !important; filter: grayscale(40%); transition: opacity 0.3s ease, filter 0.3s ease; }
+@keyframes clinicalPulse { 0%, 100% { box-shadow: 0 0 0 3px #1F4E5B, 0 10px 20px -5px rgba(31, 78, 91, 0.25); } 50% { box-shadow: 0 0 0 5px rgba(31, 78, 91, 0.6), 0 12px 28px -5px rgba(31, 78, 91, 0.45); } }
+.dragging-node { cursor: grabbing !important; user-select: none !important; z-index: 50 !important; filter: drop-shadow(0 12px 24px rgba(0,0,0,0.18)); }
+.canvas-panning { cursor: grabbing !important; }
+@media (prefers-reduced-motion: reduce) { .node-highlight { animation: none !important; } * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; } }
+</style><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "error": "#ba1a1a", "indicator-warning": "#D97706", "surface-tint": "#386472", "secondary": "#545f6c", "surface-container-lowest": "#ffffff", "on-secondary-fixed": "#111d27", "error-container": "#ffdad6", "on-surface-variant": "#41484b", "indicator-stable-subtle": "#ECFDF5", "primary-container": "#1f4e5b", "border-strong": "#CBD0D3", "secondary-container": "#d8e4f3", "outline": "#71787b", "primary": "#003743", "indicator-warning-subtle": "#FEF3C7", "surface-card": "#FFFFFF", "tertiary": "#5f1906", "indicator-stable": "#059669", "inverse-surface": "#283236", "on-tertiary-fixed-variant": "#7c2e19", "surface-dim": "#d1dce1", "on-error-container": "#93000a", "tertiary-fixed": "#ffdbd2", "tertiary-fixed-dim": "#ffb4a1", "secondary-fixed": "#d8e4f3", "on-secondary": "#ffffff", "surface-container-low": "#ebf5fb", "outline-variant": "#c0c8cb", "on-primary": "#ffffff", "canvas-cream": "#F9F8F5", "indicator-critical-subtle": "#FEF2F2", "on-background": "#131d21", "flow-edge-active": "#1F4E5B", "indicator-assessment": "#2563EB", "on-primary-fixed": "#001f27", "on-primary-container": "#91becd", "surface-variant": "#dae4ea", "indicator-medication-subtle": "#F0FDFA", "surface-bright": "#f3faff", "surface": "#f3faff", "surface-container-highest": "#dae4ea", "indicator-therapy": "#8E7DBE", "on-primary-fixed-variant": "#1d4d59", "on-tertiary-container": "#ff9e84", "surface-container-high": "#e0eaef", "on-secondary-container": "#5a6572", "primary-fixed-dim": "#a0cedd", "primary-fixed": "#bceafa", "indicator-assessment-subtle": "#EFF6FF", "on-tertiary-fixed": "#3c0800", "flow-edge-line": "#94A3B8", "on-secondary-fixed-variant": "#3d4854", "inverse-on-surface": "#e8f2f8", "background": "#f3faff", "tertiary-container": "#7d2f1a", "indicator-critical": "#DC2626", "indicator-medication": "#0D9488", "on-error": "#ffffff", "on-surface": "#131d21", "indicator-therapy-subtle": "#F3F0FA", "surface-container": "#e5eff5", "border-subtle": "#E4E2DC", "secondary-fixed-dim": "#bcc8d6", "on-tertiary": "#ffffff", "inverse-primary": "#a0cedd", "flow-grid-dot": "#D8D6CE", "focus-ring": "#0D74CE" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "margin": "2rem", "gutter-sm": "1rem", "space-xs": "0.25rem", "space-md": "1rem", "space-lg": "1.5rem", "space-sm": "0.5rem", "margin-sm": "1rem", "space-xl": "2.25rem", "gutter": "1.5rem" }, "fontFamily": { "headline-md": ["Manrope"], "body-sm": ["Manrope"], "body-lg": ["Manrope"], "metric-val": ["JetBrains Mono"], "headline-lg": ["Manrope"], "title-sm": ["Manrope"], "headline-lg-mobile": ["Manrope"], "body-md": ["Manrope"], "headline-sm": ["Manrope"], "title-md": ["Manrope"], "label-md": ["JetBrains Mono"], "display": ["Manrope"], "label-sm": ["JetBrains Mono"] }, "fontSize": { "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }], "body-lg": ["16px", { "lineHeight": "26px", "fontWeight": "400" }], "metric-val": ["18px", { "lineHeight": "22px", "fontWeight": "600" }], "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.015em", "fontWeight": "600" }], "title-sm": ["14px", { "lineHeight": "20px", "fontWeight": "600" }], "headline-lg-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }], "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }], "title-md": ["16px", { "lineHeight": "24px", "fontWeight": "600" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }], "display": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "500" }] } } } };</script><header class="h-14 bg-surface/95 backdrop-blur-xl border-b border-border-subtle z-50 flex items-center justify-between px-space-lg shrink-0"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-sm"><span class="font-title-md text-title-md text-primary tracking-tight font-semibold">@behavioral-health/flow</span></div><span class="font-label-sm text-label-sm px-space-sm py-0.5 rounded-full bg-secondary-container text-on-secondary-fixed-variant">v1.0.0-rc</span><div class="hidden md:flex items-center gap-space-xs px-space-sm py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-label-sm"><span class="material-symbols-outlined text-[14px]">terminal</span><span class="">npm install @behavioral-health/flow</span><button class="hover:text-primary transition-colors flex items-center ml-space-xs" id="copy-npm-btn" title="Copy command" type="button"><span class="material-symbols-outlined text-[14px]">content_copy</span></button></div></div><div class="flex items-center gap-space-sm text-secondary font-label-sm text-label-sm"><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-indicator-stable"></span> React Flow v11+ Ready</span></div></header><main class="relative bg-surface w-full flex flex-col justify-between"><div class="flex flex-col w-full max-w-7xl mx-auto px-4 sm:px-6 py-2 gap-2">
+<!-- Compact Minimalist Banner & Metadata Strip -->
+<section class="w-full flex flex-col gap-1.5">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-[10px] uppercase tracking-wider text-primary font-semibold bg-surface-container px-2 py-0.5 rounded">Component Showcase</span>
+<span class="font-label-sm text-label-sm text-secondary flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-indicator-stable"></span>
+            A11y Verified: Tree &amp; Canvas Dual Mode
+          </span>
+</div>
+<div class="flex items-baseline gap-2 mt-0.5">
+<h1 class="font-headline-md text-headline-sm sm:text-headline-md text-primary tracking-tight leading-tight">Patient History Flow</h1>
+<code class="font-label-sm text-label-sm text-surface-tint bg-surface-container-high px-1.5 py-0.5 rounded">&lt;HistoryFlow /&gt;</code>
+<span class="hidden md:inline font-body-sm text-body-sm text-secondary truncate max-w-md">— Minimal, accessible React Flow canvas for patient trajectories</span>
+</div>
+</div>
+<!-- Action Utilities -->
+<div class="flex items-center gap-space-xs self-start sm:self-auto shrink-0">
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-on-primary hover:bg-primary-container font-title-sm text-title-sm shadow-sm transition-all active:scale-95" id="btn-add-quick-node">
+<span class="material-symbols-outlined text-[16px]">add_circle</span>
+<span class="">+ Add Clinical Node</span>
+</button>
+<button class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-secondary hover:text-on-surface font-label-sm text-label-sm transition-colors" id="btn-tree-toggle" title="Open WCAG A11y Tree Structure">
+<span class="material-symbols-outlined text-[16px]">account_tree</span>
+<span class="">A11y Tree</span>
+</button>
+</div>
+</div>
+<!-- Category Filter Controls -->
+<div class="flex items-center justify-between gap-space-sm pt-0.5 pb-1 overflow-x-auto">
+<div class="flex items-center gap-1.5" id="filter-pill-container">
+<button class="filter-pill active px-2.5 py-1 rounded-full font-label-sm text-label-sm bg-primary text-on-primary transition-all" data-filter="all">All Nodes (<span class="" id="total-node-count">8</span>)</button>
+<button class="filter-pill px-2.5 py-1 rounded-full font-label-sm text-label-sm bg-surface-container text-secondary hover:bg-surface-container-high transition-all" data-filter="family">Family (<span class="filter-count" data-type="family">2</span>)</button>
+<button class="filter-pill px-2.5 py-1 rounded-full font-label-sm text-label-sm bg-surface-container text-secondary hover:bg-surface-container-high transition-all" data-filter="diagnosis">Diagnosis (<span class="filter-count" data-type="diagnosis">1</span>)</button>
+<button class="filter-pill px-2.5 py-1 rounded-full font-label-sm text-label-sm bg-surface-container text-secondary hover:bg-surface-container-high transition-all" data-filter="medication">Medication (<span class="filter-count" data-type="medication">1</span>)</button>
+<button class="filter-pill px-2.5 py-1 rounded-full font-label-sm text-label-sm bg-surface-container text-secondary hover:bg-surface-container-high transition-all" data-filter="therapy">Therapy (<span class="filter-count" data-type="therapy">1</span>)</button>
+<button class="filter-pill px-2.5 py-1 rounded-full font-label-sm text-label-sm bg-surface-container text-secondary hover:bg-surface-container-high transition-all" data-filter="assessment">Assessment (<span class="filter-count" data-type="assessment">1</span>)</button>
+<button class="filter-pill px-2.5 py-1 rounded-full font-label-sm text-label-sm bg-surface-container text-secondary hover:bg-surface-container-high transition-all" data-filter="event">Events (<span class="filter-count" data-type="event">1</span>)</button>
+</div>
+<div class="flex items-center gap-space-sm text-secondary font-label-sm text-label-sm hidden md:flex shrink-0">
+<span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-indicator-stable"></span> Active Care</span>
+<span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-indicator-warning"></span> Chronic / Monitored</span>
+<span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-indicator-critical"></span> Acute Episode</span>
+</div>
+</div>
+</section>
+<!-- Main Canvas Area with React Flow Aesthetic -->
+<section class="w-full relative">
+<div class="relative w-full h-[520px] rounded-xl overflow-hidden bg-canvas-cream shadow-md flex select-none cursor-grab active:cursor-grabbing border border-border-subtle" id="flow-viewport-container">
+<!-- Ambient Dot Pattern (React Flow Background) -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none opacity-40" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<pattern height="20" id="flow-grid-dots" patternunits="userSpaceOnUse" width="20">
+<circle cx="2" cy="2" fill="#71787B" r="1"></circle>
+</pattern>
+</defs>
+<rect fill="url(#flow-grid-dots)" height="100%" width="100%"></rect>
+</svg>
+<!-- Pan & Zoom Layer Wrapper -->
+<div class="absolute inset-0 w-full h-full origin-top-left transition-transform duration-75" id="flow-world-layer" style="transform: translate(0px, 0px) scale(1);">
+<!-- SVG Wire Edges Layer -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none z-10 overflow-visible" id="flow-edges-layer"></svg>
+<!-- Pannable/Interactive Nodes Container -->
+<div class="absolute inset-0 w-full h-full z-20" id="flow-node-stage">
+<!-- 1. CENTER ROOT NODE: Patient -->
+<div aria-label="Patient root node: John Doe" class="flow-node cursor-grab active:cursor-grabbing absolute left-[330px] top-[250px] w-[210px] bg-surface-card rounded-lg shadow-sm hover:shadow-md transition-shadow p-3 border border-border-subtle focus:outline-none focus:ring-2 focus:ring-primary" data-age="34" data-id="patient-root" data-name="John Doe" data-role="Patient" data-status="Active Care" data-taxonomy="FHIR Patient/JD-9021" data-x="330" data-y="250" role="button" tabindex="0">
+<!-- Top handle -->
+<div class="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-primary-container shadow-sm hover:scale-125 transition-transform pointer-events-none"></div>
+<!-- Left handle -->
+<div class="absolute top-1/2 -left-1.5 -translate-y-1/2 w-3 h-3 rounded-full bg-primary-container shadow-sm hover:scale-125 transition-transform pointer-events-none"></div>
+<!-- Right handle -->
+<div class="absolute top-1/2 -right-1.5 -translate-y-1/2 w-3 h-3 rounded-full bg-primary-container shadow-sm hover:scale-125 transition-transform pointer-events-none"></div>
+<!-- Bottom handle -->
+<div class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-primary-container shadow-sm hover:scale-125 transition-transform pointer-events-none"></div>
+<div class="flex items-center gap-2 mb-1">
+<div class="w-7 h-7 rounded-full bg-primary text-on-primary flex items-center justify-center font-title-sm text-title-sm font-semibold shrink-0">
+              JD
+            </div>
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm text-on-surface leading-tight font-semibold">John Doe</span>
+<span class="font-label-sm text-[11px] text-secondary">34 yrs · Patient Root</span>
+</div>
+</div>
+<div class="mt-1 flex items-center justify-between pt-1 bg-surface-container-low px-1.5 py-0.5 rounded">
+<span class="font-label-sm text-[11px] text-secondary">Cohort</span>
+<span class="font-label-sm text-[11px] px-1.5 py-0.5 rounded bg-indicator-stable-subtle text-indicator-stable font-semibold" data-status-pill="patient-root">Active Care</span>
+</div>
+</div>
+<!-- 2. TOP BRANCH: Family (Mother) -->
+<div aria-label="Family node: Mother" class="flow-node cursor-grab active:cursor-grabbing absolute left-[345px] top-[40px] w-[180px] bg-surface-card rounded-lg shadow-sm hover:shadow-md transition-shadow p-2.5 border border-border-subtle focus:outline-none focus:ring-2 focus:ring-primary" data-age="58" data-condition="Depression" data-id="family-mother" data-node-type="family" data-relation="Mother" data-taxonomy="SNOMED-CT: 370143000" data-x="345" data-y="40" role="button" tabindex="0">
+<div class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-secondary shadow-sm pointer-events-none"></div>
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-[10px] uppercase tracking-wider text-secondary font-medium">Family (Maternal)</span>
+<span class="material-symbols-outlined text-secondary text-[15px]">escalator_warning</span>
+</div>
+<div class="font-title-sm text-title-sm text-on-surface mt-0.5 font-semibold">Mother, 58 yrs</div>
+<div class="mt-1 flex items-center gap-1">
+<span class="font-label-sm text-[11px] px-1.5 py-0.5 rounded bg-surface-container text-on-surface-variant">Depression (Hereditary)</span>
+</div>
+</div>
+<!-- 3. LEFT BRANCH: Family (Father) -->
+<div aria-label="Family node: Father" class="flow-node cursor-grab active:cursor-grabbing absolute left-[40px] top-[255px] w-[170px] bg-surface-card rounded-lg shadow-sm hover:shadow-md transition-shadow p-2.5 border border-border-subtle focus:outline-none focus:ring-2 focus:ring-primary" data-age="62" data-condition="Anxiety" data-id="family-father" data-node-type="family" data-relation="Father" data-taxonomy="SNOMED-CT: 197480006" data-x="40" data-y="255" role="button" tabindex="0">
+<div class="absolute top-1/2 -right-1.5 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-secondary shadow-sm pointer-events-none"></div>
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-[10px] uppercase tracking-wider text-secondary font-medium">Family (Paternal)</span>
+<span class="material-symbols-outlined text-secondary text-[15px]">elderly</span>
+</div>
+<div class="font-title-sm text-title-sm text-on-surface mt-0.5 font-semibold">Father, 62 yrs</div>
+<div class="mt-1">
+<span class="font-label-sm text-[11px] px-1.5 py-0.5 rounded bg-surface-container text-on-surface-variant">Anxiety History</span>
+</div>
+</div>
+<!-- 4. RIGHT BRANCH: Diagnosis (Major Depression) -->
+<div aria-label="Diagnosis node: Major Depression" class="flow-node cursor-grab active:cursor-grabbing absolute left-[650px] top-[245px] w-[190px] bg-surface-card rounded-lg shadow-sm hover:shadow-md transition-shadow p-2.5 border border-border-subtle focus:outline-none focus:ring-2 focus:ring-primary ring-2 ring-primary shadow-lg" data-code="ICD-10 F33.1" data-date="Mar 2024" data-id="diag-depression" data-name="Major Depression" data-node-type="diagnosis" data-status="Active Care" data-taxonomy="ICD-10-CM F33.1" data-x="650" data-y="245" role="button" tabindex="0">
+<!-- Left handle -->
+<div class="absolute top-1/2 -left-1.5 -translate-y-1/2 w-3 h-3 rounded-full bg-primary shadow-sm pointer-events-none"></div>
+<!-- Right handle -->
+<div class="absolute top-1/2 -right-1.5 -translate-y-1/2 w-3 h-3 rounded-full bg-primary shadow-sm pointer-events-none"></div>
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-[10px] uppercase tracking-wider text-primary font-semibold">Primary Diagnosis</span>
+<span class="font-label-sm text-[10px] px-1 rounded bg-secondary-container text-on-secondary-fixed">F33.1</span>
+</div>
+<div class="font-title-sm text-title-sm text-on-surface mt-0.5 font-semibold">Major Depression</div>
+<div class="mt-0.5 text-secondary font-label-sm text-[11px]">Recurrent · Moderate</div>
+<div class="mt-1.5 pt-1 flex items-center justify-between bg-surface-container-low px-1.5 py-0.5 rounded">
+<span class="font-label-sm text-[11px] text-secondary">Logged</span>
+<span class="font-label-sm text-[11px] text-on-surface font-medium">Mar 2024</span>
+</div>
+</div>
+<!-- 5. SUB-BRANCH: Medication (Sertraline) -->
+<div aria-label="Medication node: Sertraline" class="flow-node cursor-grab active:cursor-grabbing absolute left-[885px] top-[140px] w-[180px] bg-surface-card rounded-lg shadow-sm hover:shadow-md transition-shadow p-2.5 border border-border-subtle focus:outline-none focus:ring-2 focus:ring-primary" data-dosage="50mg · Daily" data-id="med-sertraline" data-name="Sertraline" data-node-type="medication" data-status="Active Care" data-taxonomy="RxNorm: 36437" data-x="885" data-y="140" role="button" tabindex="0">
+<div class="absolute top-1/2 -left-1.5 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-indicator-medication shadow-sm pointer-events-none"></div>
+<div class="flex items-center justify-between text-indicator-medication">
+<span class="font-label-sm text-[10px] uppercase tracking-wider font-semibold">Medication Rx</span>
+<span class="material-symbols-outlined text-[15px]">prescriptions</span>
+</div>
+<div class="font-title-sm text-title-sm text-on-surface mt-0.5 font-semibold">Sertraline</div>
+<div class="font-label-sm text-[11px] text-secondary">50mg · Oral (Daily)</div>
+<div class="mt-1 flex items-center gap-1">
+<span class="font-label-sm text-[11px] px-1.5 py-0.5 rounded bg-indicator-medication-subtle text-indicator-medication font-medium" data-status-pill="med-sertraline">Active Prescription</span>
+</div>
+</div>
+<!-- 6. BOTTOM BRANCH: Therapy (CBT) -->
+<div aria-label="Therapy node: CBT Therapy" class="flow-node cursor-grab active:cursor-grabbing absolute left-[345px] top-[430px] w-[180px] bg-surface-card rounded-lg shadow-sm hover:shadow-md transition-shadow p-2.5 border border-border-subtle focus:outline-none focus:ring-2 focus:ring-primary" data-date="Started: Sep 2024" data-frequency="Weekly" data-id="therapy-cbt" data-name="CBT Protocol" data-node-type="therapy" data-status="Active Care" data-taxonomy="CPT: 90834 / SNOMED: 401205001" data-x="345" data-y="430" role="button" tabindex="0">
+<div class="absolute -top-1.5 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-indicator-therapy shadow-sm pointer-events-none"></div>
+<div class="flex items-center justify-between text-indicator-therapy">
+<span class="font-label-sm text-[10px] uppercase tracking-wider font-semibold">Therapeutic Plan</span>
+<span class="material-symbols-outlined text-[15px]">psychology</span>
+</div>
+<div class="font-title-sm text-title-sm text-on-surface mt-0.5 font-semibold">CBT Protocol</div>
+<div class="font-label-sm text-[11px] text-secondary">Weekly · 50 min sessions</div>
+<div class="mt-1 flex items-center gap-1">
+<span class="font-label-sm text-[11px] px-1.5 py-0.5 rounded bg-indicator-therapy-subtle text-indicator-therapy font-medium" data-status-pill="therapy-cbt">Started Sep 2024</span>
+</div>
+</div>
+<!-- 7. SUPPLEMENTAL: Assessment (PHQ-9) -->
+<div aria-label="Assessment node: PHQ-9" class="flow-node cursor-grab active:cursor-grabbing absolute left-[90px] top-[395px] w-[180px] bg-surface-card rounded-lg shadow-sm hover:shadow-md transition-shadow p-2.5 border border-border-subtle focus:outline-none focus:ring-2 focus:ring-primary" data-delta="-3 pts" data-id="assess-phq9" data-interp="Moderate" data-name="PHQ-9 Assessment" data-node-type="assessment" data-score="16" data-status="Monitored" data-taxonomy="LOINC: 44249-1" data-test="PHQ-9" data-x="90" data-y="395" role="button" tabindex="0">
+<div class="flex items-center justify-between text-indicator-assessment">
+<span class="font-label-sm text-[10px] uppercase tracking-wider font-semibold">Standard Metric</span>
+<span class="material-symbols-outlined text-[15px]">query_stats</span>
+</div>
+<div class="flex items-baseline justify-between mt-0.5">
+<span class="font-title-sm text-title-sm text-on-surface font-semibold">PHQ-9 Assessment</span>
+<span class="font-metric-val text-metric-val text-indicator-assessment font-bold">16</span>
+</div>
+<div class="flex items-center justify-between mt-0.5 text-secondary font-label-sm text-[11px]">
+<span class="">Moderate Severity</span>
+<span class="text-indicator-stable font-semibold">▼ -3 pts</span>
+</div>
+</div>
+<!-- 8. SUPPLEMENTAL: Event (Panic Episode) -->
+<div aria-label="Event node: Panic Episode" class="flow-node cursor-grab active:cursor-grabbing absolute left-[885px] top-[340px] w-[180px] bg-surface-card rounded-lg shadow-sm hover:shadow-md transition-shadow p-2.5 border border-border-subtle focus:outline-none focus:ring-2 focus:ring-primary" data-date="Jun 14, 2025" data-duration="Self-limited" data-id="event-panic" data-name="Panic Episode" data-node-type="event" data-status="Monitored" data-taxonomy="SNOMED-CT: 271594007" data-title="Panic Episode" data-x="885" data-y="340" role="button" tabindex="0">
+<div class="flex items-center justify-between text-indicator-critical">
+<span class="font-label-sm text-[10px] uppercase tracking-wider font-semibold">Clinical Event</span>
+<span class="material-symbols-outlined text-[15px]">notification_important</span>
+</div>
+<div class="font-title-sm text-title-sm text-on-surface mt-0.5 font-semibold">Panic Episode</div>
+<div class="text-secondary font-label-sm text-[11px]">Self-limited · ~15 min</div>
+<div class="mt-1 flex items-center justify-between">
+<span class="font-label-sm text-[10px] px-1.5 py-0.5 rounded bg-indicator-critical-subtle text-indicator-critical font-medium" data-status-pill="event-panic">Logged Jun 14</span>
+</div>
+</div>
+</div>
+</div>
+<!-- React Flow Left Controls Toolbar (Overlay) -->
+<div class="absolute bottom-3 left-3 z-30 flex items-center gap-1 bg-surface-card/95 backdrop-blur-md p-1 rounded-lg shadow-md border border-border-subtle text-on-surface">
+<button class="w-7 h-7 rounded hover:bg-surface-container flex items-center justify-center transition-colors active:scale-95" id="ctrl-zoom-in" title="Zoom In (+)">
+<span class="material-symbols-outlined text-[16px]">add</span>
+</button>
+<span class="font-label-sm text-[11px] px-1.5 py-0.5 rounded bg-surface-container text-on-surface-variant font-mono" id="zoom-indicator">100%</span>
+<button class="w-7 h-7 rounded hover:bg-surface-container flex items-center justify-center transition-colors active:scale-95" id="ctrl-zoom-out" title="Zoom Out (-)">
+<span class="material-symbols-outlined text-[16px]">remove</span>
+</button>
+<div class="w-px h-4 bg-border-strong mx-0.5"></div>
+<button class="w-7 h-7 rounded hover:bg-surface-container flex items-center justify-center transition-colors active:scale-95 text-primary" id="ctrl-fit" title="Fit to View (Re-center All Nodes)">
+<span class="material-symbols-outlined text-[16px]">crop_free</span>
+</button>
+<button class="w-7 h-7 rounded hover:bg-surface-container flex items-center justify-center transition-colors active:scale-95" id="ctrl-lock" title="Lock / Unlock Canvas Interactivity">
+<span class="material-symbols-outlined text-[16px]" id="lock-icon">lock_open</span>
+</button>
+<div class="w-px h-4 bg-border-strong mx-0.5"></div>
+<button class="px-2 h-7 rounded hover:bg-surface-container flex items-center gap-1 font-label-sm text-[11px] text-secondary hover:text-primary transition-colors active:scale-95" id="ctrl-export" title="Export Flow Diagram">
+<span class="material-symbols-outlined text-[14px]">file_download</span>
+<span class="font-medium" id="export-text">Export SVG</span>
+</button>
+</div>
+<!-- Canvas Mini Helper Hint (Top-Left) -->
+<div class="absolute top-3 left-3 z-30 pointer-events-none hidden sm:flex items-center gap-1.5 bg-surface-card/80 backdrop-blur-md px-2 py-0.5 rounded text-secondary font-label-sm text-[11px] border border-border-subtle/80">
+<span class="material-symbols-outlined text-[13px]">pan_tool</span>
+<span class="">Drag canvas to pan · Drag any node to reposition</span>
+</div>
+<!-- Floating Inspector Card (Right Overlay) -->
+<div class="absolute top-3 right-3 bottom-3 w-72 max-w-[calc(100%-1.5rem)] bg-surface-card/95 backdrop-blur-md shadow-xl rounded-xl border border-border-subtle z-30 p-3 flex flex-col justify-between transform transition-transform duration-300 ease-out" id="node-inspector-drawer">
+<div class="flex flex-col gap-1.5 overflow-y-auto pr-0.5">
+<div class="flex items-center justify-between border-b border-border-subtle pb-1.5">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-primary" id="drawer-dot" style="background-color: rgb(31, 78, 91);"></span>
+<span class="font-label-sm text-[10px] uppercase font-semibold tracking-wider text-secondary" id="drawer-badge">DIAGNOSIS Node</span>
+</div>
+<button class="w-6 h-6 rounded hover:bg-surface-container flex items-center justify-center text-secondary hover:text-on-surface" id="btn-close-inspector" title="Close inspector">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div>
+<div>
+<h3 class="font-headline-sm text-[16px] leading-tight text-primary tracking-tight font-semibold" id="drawer-title">Major Depression</h3>
+<div class="font-mono text-[10px] text-surface-tint bg-surface-container-high px-1.5 py-0.5 rounded inline-block mt-0.5" id="drawer-taxonomy">ICD-10-CM F33.1</div>
+</div>
+<!-- Status Toggle Bar -->
+<div class="p-1.5 bg-surface-container-low rounded-lg flex flex-col gap-1">
+<span class="font-label-sm text-[10px] text-secondary font-medium">Trajectory Status</span>
+<div class="grid grid-cols-3 gap-1 bg-surface-container p-0.5 rounded" id="drawer-status-buttons">
+<button class="status-btn text-[11px] py-0.5 rounded font-medium transition-colors bg-surface-card text-primary shadow-sm font-semibold" data-status="Active Care">Active</button>
+<button class="status-btn text-[11px] py-0.5 rounded font-medium transition-colors text-secondary hover:text-on-surface" data-status="Monitored">Monitored</button>
+<button class="status-btn text-[11px] py-0.5 rounded font-medium transition-colors text-secondary hover:text-on-surface" data-status="Resolved">Resolved</button>
+</div>
+</div>
+<!-- Clinical Meta Details -->
+<div class="space-y-1 text-body-sm text-[12px]">
+<div class="flex items-center justify-between text-secondary">
+<span class="">Logged Timeline</span>
+<span class="font-medium text-on-surface text-[12px]" id="drawer-date">Mar 2024</span>
+</div>
+<div class="flex items-center justify-between text-secondary">
+<span class="">Clinical Specifics</span>
+<span class="font-medium text-on-surface text-[12px]" id="drawer-meta">ICD-10 F33.1</span>
+</div>
+</div>
+<!-- Linked Connected Edges Breakdown -->
+<div class="mt-0.5 pt-1.5 border-t border-border-subtle">
+<span class="font-label-sm text-[10px] uppercase tracking-wider text-secondary font-semibold block mb-1">Relational Links</span>
+<div class="space-y-1 text-label-sm font-label-sm text-[11px]" id="drawer-links-container"><div class="flex items-center justify-between p-1 rounded bg-surface-container hover:bg-surface-container-high cursor-pointer transition-colors">
+<span class="text-on-surface truncate flex items-center gap-1 font-medium"><span class="text-secondary">←</span> John Doe</span>
+<span class="text-secondary text-[10px] shrink-0 font-mono">Primary Diagnosis</span>
+</div><div class="flex items-center justify-between p-1 rounded bg-surface-container hover:bg-surface-container-high cursor-pointer transition-colors">
+<span class="text-on-surface truncate flex items-center gap-1 font-medium"><span class="text-secondary">→</span> Sertraline</span>
+<span class="text-secondary text-[10px] shrink-0 font-mono">Active Pharmacotherapy</span>
+</div><div class="flex items-center justify-between p-1 rounded bg-surface-container hover:bg-surface-container-high cursor-pointer transition-colors">
+<span class="text-on-surface truncate flex items-center gap-1 font-medium"><span class="text-secondary">→</span> Panic Episode</span>
+<span class="text-secondary text-[10px] shrink-0 font-mono">Comorbidity Event</span>
+</div></div>
+</div>
+</div>
+<!-- Drawer Actions -->
+<div class="pt-1.5 border-t border-border-subtle flex flex-col gap-1 mt-1">
+<button class="w-full py-1 bg-primary text-on-primary rounded-lg font-title-sm text-[12px] hover:bg-primary-container transition-colors flex items-center justify-center gap-1 active:scale-98" id="btn-focus-subgraph">
+<span class="material-symbols-outlined text-[15px]">center_focus_strong</span>
+<span class="">Focus Sub-Graph</span>
+</button>
+<button class="w-full py-1 bg-surface-container hover:bg-surface-container-high text-on-surface-variant rounded-lg font-title-sm text-[12px] transition-colors flex items-center justify-center gap-1" id="btn-add-connected-note">
+<span class="material-symbols-outlined text-[15px]">note_add</span>
+<span class="" id="note-btn-label">Add Connected Note</span>
+</button>
+</div>
+</div>
+<!-- Toast Notification -->
+<div class="absolute bottom-4 right-4 z-50 bg-primary text-on-primary px-3 py-2 rounded-lg shadow-lg flex items-center gap-2 font-label-sm text-label-sm transform translate-y-16 opacity-0 transition-all duration-300 pointer-events-none" id="flow-toast">
+<span class="material-symbols-outlined text-[16px] text-indicator-stable">check_circle</span>
+<span class="" id="toast-message">Action confirmed</span>
+</div>
+</div>
+</section>
+<!-- Developer API & Props Spec Bottom Bar (Compact Desktop Workspace) -->
+<section class="w-full pb-3">
+<div class="bg-surface-card rounded-xl shadow-sm p-3 flex flex-col gap-2 border border-border-subtle">
+<!-- Tabs Header -->
+<div class="flex items-center justify-between flex-wrap gap-2">
+<div class="flex items-center gap-1.5" id="api-tab-group">
+<button class="tab-btn px-3 py-1 rounded-lg font-title-sm text-[13px] bg-primary text-on-primary transition-all font-semibold" data-tab="tab-jsx">Quickstart JSX</button>
+<button class="tab-btn px-3 py-1 rounded-lg font-title-sm text-[13px] bg-surface-container text-secondary hover:text-on-surface transition-all font-semibold" data-tab="tab-types">Node Types</button>
+<button class="tab-btn px-3 py-1 rounded-lg font-title-sm text-[13px] bg-surface-container text-secondary hover:text-on-surface transition-all font-semibold" data-tab="tab-props">Props Contract</button>
+</div>
+<div class="flex items-center gap-2 text-secondary font-label-sm text-label-sm">
+<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-indicator-stable"></span> React Flow v11+ Compatible</span>
+<span class="">·</span>
+<span class="">Zero Layout Shifts</span>
+</div>
+</div>
+<!-- Tab Content 1: Quickstart JSX -->
+<div class="tab-panel flex flex-col" id="tab-jsx">
+<div class="relative bg-surface-container-highest p-2.5 rounded-lg overflow-x-auto border border-border-subtle max-h-36">
+<pre class="font-label-sm text-[11px] text-on-surface leading-snug whitespace-pre font-mono">import { HistoryFlow, PatientNode, FamilyNode, DiagnosisNode, MedicationNode, TherapyNode } from '@behavioral-health/flow';
+
+export function PatientCanvas() {
+  return (
+    &lt;HistoryFlow
+      nodes={patientNodes}
+      edges={patientEdges}
+      nodeTypes={{ patient: PatientNode, family: FamilyNode, diagnosis: DiagnosisNode, medication: MedicationNode, therapy: TherapyNode }}
+      fitView
+      snapToGrid
+      a11yTreeAnnouncement
+    /&gt;
+  );
+}</pre>
+</div>
+</div>
+<!-- Tab Content 2: Node Types -->
+<div class="tab-panel hidden grid grid-cols-1 md:grid-cols-3 gap-2" id="tab-types">
+<div class="p-2.5 bg-surface-container-low rounded-lg border border-border-subtle">
+<div class="flex items-center gap-1.5 mb-0.5">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="font-title-sm text-title-sm text-primary font-semibold">&lt;PatientNode /&gt;</span>
+</div>
+<p class="font-body-sm text-[12px] text-secondary">Root origin node. Exposes 4 omnidirectional connector handles. Displays core identity, MRN, and care episode status.</p>
+</div>
+<div class="p-space-md p-2.5 bg-surface-container-low rounded-lg border border-border-subtle">
+<div class="flex items-center gap-1.5 mb-0.5">
+<span class="w-2 h-2 rounded-full bg-indicator-medication"></span>
+<span class="font-title-sm text-title-sm text-indicator-medication font-semibold">&lt;MedicationNode /&gt;</span>
+</div>
+<p class="font-body-sm text-[12px] text-secondary">Pharmacological node with dose, frequency, titration timeline, and prescription discontinuation indicators.</p>
+</div>
+<div class="p-space-md p-2.5 bg-surface-container-low rounded-lg border border-border-subtle">
+<div class="flex items-center gap-1.5 mb-0.5">
+<span class="w-2 h-2 rounded-full bg-indicator-assessment"></span>
+<span class="font-title-sm text-title-sm text-indicator-assessment font-semibold">&lt;AssessmentNode /&gt;</span>
+</div>
+<p class="font-body-sm text-[12px] text-secondary">Metric container for PHQ-9, GAD-7, and Columbia C-SSRS scoring. Shows numeric deltas and severity classifications.</p>
+</div>
+</div>
+<!-- Tab Content 3: Props Contract -->
+<div class="tab-panel hidden overflow-x-auto" id="tab-props">
+<table class="w-full text-left font-body-sm text-body-sm">
+<thead>
+<tr class="text-secondary font-label-sm text-[11px] uppercase bg-surface-container-low rounded">
+<th class="p-1.5">Prop</th>
+<th class="p-1.5">Type</th>
+<th class="p-1.5">Default</th>
+<th class="p-1.5">Description</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border-subtle text-[12px]">
+<tr>
+<td class="p-1.5 font-mono text-primary font-semibold">nodes</td>
+<td class="p-1.5 font-mono text-secondary">BHNode[]</td>
+<td class="p-1.5 font-mono text-secondary">[]</td>
+<td class="p-1.5 text-on-surface">Strict typed array of patient trajectory nodes</td>
+</tr>
+<tr>
+<td class="p-1.5 font-mono text-primary font-semibold">edges</td>
+<td class="p-1.5 font-mono text-secondary">BHEdge[]</td>
+<td class="p-1.5 font-mono text-secondary">[]</td>
+<td class="p-1.5 text-on-surface">Directional links between care items with semantic styling</td>
+</tr>
+<tr>
+<td class="p-1.5 font-mono text-primary font-semibold">a11yTreeAnnouncement</td>
+<td class="p-1.5 font-mono text-secondary">boolean</td>
+<td class="p-1.5 font-mono text-secondary">true</td>
+<td class="p-1.5 text-on-surface">Mounts aria-live announcements on active node click/drag</td>
+</tr>
+<tr>
+<td class="p-1.5 font-mono text-primary font-semibold">onNodeSelect</td>
+<td class="p-1.5 font-mono text-secondary">(node: BHNode) =&gt; void</td>
+<td class="p-1.5 font-mono text-secondary">undefined</td>
+<td class="p-1.5 text-on-surface">Invoked on clinician selection or keyboard focus</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+</div>
+<!-- Interactive Drawer: Accessible Semantic Tree (A11y View) -->
+<aside class="fixed inset-y-0 right-0 w-96 max-w-full bg-surface-card shadow-2xl z-50 transform translate-x-full transition-transform duration-300 flex flex-col p-4" id="accessible-tree-drawer">
+<div class="flex items-center justify-between pb-3 border-b border-border-subtle">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary">account_tree</span>
+<h2 class="font-title-md text-title-md text-primary font-semibold">Accessible Trajectory Tree</h2>
+</div>
+<button class="w-8 h-8 rounded hover:bg-surface-container flex items-center justify-center text-secondary" id="btn-close-tree">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<p class="font-body-sm text-[12px] text-secondary my-2">
+  WCAG 2.1 Compliant hierarchical DOM representation. Screen readers traverse this semantic branch structure when 2D canvas coordinates are unavailable.
+</p>
+<div class="flex-1 overflow-y-auto space-y-2.5 font-body-sm text-[13px] text-on-surface pr-1">
+<!-- Root -->
+<div class="p-2.5 bg-surface-container-low rounded-lg border border-border-subtle">
+<div class="font-title-sm text-title-sm text-primary flex items-center gap-1.5 font-semibold">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+      Patient Root: John Doe (34)
+    </div>
+<div class="text-secondary pl-3.5 text-label-sm font-label-sm">Status: Active Care · Key trajectory origin</div>
+<!-- Children Branch: Family -->
+<div class="mt-2 pl-3 space-y-2">
+<div class="p-2 bg-surface-card rounded shadow-sm border border-border-subtle">
+<span class="font-label-sm text-label-sm font-semibold text-secondary">Family History</span>
+<ul class="list-disc list-inside text-secondary text-label-sm pl-1 mt-0.5">
+<li class="">Mother (58): Recurrent Depression</li>
+<li class="">Father (62): Generalized Anxiety</li>
+</ul>
+</div>
+<!-- Children Branch: Diagnosis & Medication -->
+<div class="p-2 bg-surface-card rounded shadow-sm border border-border-subtle">
+<span class="font-label-sm text-label-sm font-semibold text-primary">Active Diagnosis</span>
+<div class="text-on-surface font-title-sm text-title-sm mt-0.5">Major Depression (ICD F33.1)</div>
+<div class="text-secondary text-label-sm">Logged Mar 2024 · Recurrent, moderate</div>
+<div class="mt-1.5 pl-2.5">
+<span class="font-label-sm text-label-sm text-indicator-medication font-medium">↳ Linked Pharmacotherapy</span>
+<div class="text-on-surface text-label-sm">Sertraline 50mg daily (Active Rx)</div>
+</div>
+</div>
+<!-- Children Branch: Therapy & Interventions -->
+<div class="p-2 bg-surface-card rounded shadow-sm border border-border-subtle">
+<span class="font-label-sm text-label-sm font-semibold text-indicator-therapy">Psychosocial Care</span>
+<div class="text-on-surface font-title-sm text-title-sm mt-0.5">CBT Protocol</div>
+<div class="text-secondary text-label-sm">Weekly · Since Sep 2024</div>
+</div>
+<!-- Children Branch: Metrics & Observations -->
+<div class="p-2 bg-surface-card rounded shadow-sm border border-border-subtle">
+<span class="font-label-sm text-label-sm font-semibold text-indicator-assessment">Longitudinal Metrics</span>
+<div class="text-on-surface text-label-sm mt-0.5">PHQ-9 Score: 16 (Moderate, -3 pts improvement)</div>
+<div class="text-on-surface text-label-sm mt-0.5">Acute Event: Panic episode (Jun 14, 2025)</div>
+</div>
+</div>
+</div>
+</div>
+<div class="pt-3 mt-auto border-t border-border-subtle">
+<button class="w-full py-2 bg-primary text-on-primary rounded-lg font-title-sm text-title-sm hover:bg-primary-container transition-all text-center" id="btn-sync-focus">
+    Sync Selection To Canvas
+  </button>
+</div>
+</aside>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // --- Graph Topology & Edge Definitions ---
+    const edgeDefinitions = [
+      { from: 'patient-root', to: 'family-mother', color: '#94A3B8', dash: '4 2', width: 2, label: 'Maternal Link' },
+      { from: 'patient-root', to: 'family-father', color: '#94A3B8', dash: '', width: 2, label: 'Paternal Link' },
+      { from: 'patient-root', to: 'diag-depression', color: '#1F4E5B', dash: '', width: 2.5, label: 'Primary Diagnosis' },
+      { from: 'diag-depression', to: 'med-sertraline', color: '#0D9488', dash: '', width: 2, label: 'Active Pharmacotherapy' },
+      { from: 'patient-root', to: 'therapy-cbt', color: '#8E7DBE', dash: '', width: 2, label: 'CBT Protocol' },
+      { from: 'patient-root', to: 'assess-phq9', color: '#2563EB', dash: '3 3', width: 2, label: 'Standard Assessment' },
+      { from: 'diag-depression', to: 'event-panic', color: '#DC2626', dash: '', width: 2, label: 'Comorbidity Event' }
+    ];
+
+    // --- State Variables ---
+    let panX = 0;
+    let panY = 0;
+    let zoom = 1;
+    let isLocked = false;
+    let activeFilter = 'all';
+    let selectedNodeId = null;
+
+    // Pan state
+    let isPanning = false;
+    let panStartX = 0;
+    let panStartY = 0;
+
+    // Node Drag state
+    let draggedNode = null;
+    let dragStartX = 0;
+    let dragStartY = 0;
+    let nodeStartX = 0;
+    let nodeStartY = 0;
+    let hasDragged = false;
+
+    // Elements
+    const viewport = document.getElementById('flow-viewport-container');
+    const worldLayer = document.getElementById('flow-world-layer');
+    const edgesSvg = document.getElementById('flow-edges-layer');
+    const nodeStage = document.getElementById('flow-node-stage');
+    const zoomIndicator = document.getElementById('zoom-indicator');
+    const lockIcon = document.getElementById('lock-icon');
+    const inspector = document.getElementById('node-inspector-drawer');
+    const toast = document.getElementById('flow-toast');
+    const toastMessage = document.getElementById('toast-message');
+
+    function showToast(msg) {
+      toastMessage.textContent = msg;
+      toast.classList.remove('opacity-0', 'translate-y-16');
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-16');
+      }, 2600);
+    }
+
+    // --- Transform & Render Canvas Engine ---
+    function updateWorldTransform() {
+      worldLayer.style.transform = `translate(${panX}px, ${panY}px) scale(${zoom})`;
+      zoomIndicator.textContent = `${Math.round(zoom * 100)}%`;
+    }
+
+    function getNodeCenter(nodeEl) {
+      const x = parseFloat(nodeEl.getAttribute('data-x') || nodeEl.offsetLeft);
+      const y = parseFloat(nodeEl.getAttribute('data-y') || nodeEl.offsetTop);
+      const w = nodeEl.offsetWidth || 180;
+      const h = nodeEl.offsetHeight || 90;
+      return { x: x + w / 2, y: y + h / 2, left: x, right: x + w, top: y, bottom: y + h, width: w, height: h };
+    }
+
+    function getBestPorts(n1, n2) {
+      const c1 = getNodeCenter(n1);
+      const c2 = getNodeCenter(n2);
+      let p1 = { x: c1.x, y: c1.bottom };
+      let p2 = { x: c2.x, y: c2.top };
+
+      // Calculate directional affinity
+      const dx = c2.x - c1.x;
+      const dy = c2.y - c1.y;
+
+      if (Math.abs(dx) > Math.abs(dy)) {
+        if (dx > 0) {
+          p1 = { x: c1.right, y: c1.y };
+          p2 = { x: c2.left, y: c2.y };
+        } else {
+          p1 = { x: c1.left, y: c1.y };
+          p2 = { x: c2.right, y: c2.y };
+        }
+      } else {
+        if (dy > 0) {
+          p1 = { x: c1.x, y: c1.bottom };
+          p2 = { x: c2.x, y: c2.top };
+        } else {
+          p1 = { x: c1.x, y: c1.top };
+          p2 = { x: c2.x, y: c2.bottom };
+        }
+      }
+      return { p1, p2 };
+    }
+
+    function redrawEdges() {
+      while (edgesSvg.firstChild) {
+        edgesSvg.removeChild(edgesSvg.firstChild);
+      }
+
+      edgeDefinitions.forEach(edge => {
+        const fromEl = document.querySelector(`[data-id="${edge.from}"]`);
+        const toEl = document.querySelector(`[data-id="${edge.to}"]`);
+        if (!fromEl || !toEl) return;
+
+        const { p1, p2 } = getBestPorts(fromEl, toEl);
+
+        const dx = (p2.x - p1.x) * 0.45;
+        const dy = (p2.y - p1.y) * 0.45;
+        const cp1x = p1.x + (Math.abs(dx) > 20 ? dx : 0);
+        const cp1y = p1.y + (Math.abs(dy) > 20 ? dy : 0);
+        const cp2x = p2.x - (Math.abs(dx) > 20 ? dx : 0);
+        const cp2y = p2.y - (Math.abs(dy) > 20 ? dy : 0);
+
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        const d = `M ${p1.x} ${p1.y} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p2.x} ${p2.y}`;
+        path.setAttribute('d', d);
+        path.setAttribute('fill', 'none');
+        path.setAttribute('stroke', edge.color || '#94A3B8');
+        path.setAttribute('stroke-width', edge.width || 2);
+        if (edge.dash) path.setAttribute('stroke-dasharray', edge.dash);
+        edgesSvg.appendChild(path);
+
+        // Terminal Handle Circles
+        [p1, p2].forEach(p => {
+          const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          circle.setAttribute('cx', p.x);
+          circle.setAttribute('cy', p.y);
+          circle.setAttribute('r', '3.5');
+          circle.setAttribute('fill', edge.color || '#1F4E5B');
+          circle.setAttribute('stroke', '#FFFFFF');
+          circle.setAttribute('stroke-width', '1.5');
+          edgesSvg.appendChild(circle);
+        });
+      });
+    }
+
+    // --- Dynamic Fit View Calculation ---
+    function fitView(notify = true) {
+      const nodes = Array.from(document.querySelectorAll('.flow-node'));
+      if (!nodes.length) return;
+
+      let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+      nodes.forEach(node => {
+        const x = parseFloat(node.getAttribute('data-x') || node.offsetLeft);
+        const y = parseFloat(node.getAttribute('data-y') || node.offsetTop);
+        const w = node.offsetWidth || 180;
+        const h = node.offsetHeight || 90;
+        if (x < minX) minX = x;
+        if (y < minY) minY = y;
+        if (x + w > maxX) maxX = x + w;
+        if (y + h > maxY) maxY = y + h;
+      });
+
+      const graphWidth = maxX - minX;
+      const graphHeight = maxY - minY;
+      const vpWidth = viewport.clientWidth || 1100;
+      const vpHeight = viewport.clientHeight || 520;
+
+      // Available space accounting for inspector drawer when open (~300px width on desktop)
+      const inspectorVisible = !inspector.classList.contains('translate-x-[115%]');
+      const reservedRight = (window.innerWidth >= 768 && inspectorVisible) ? 310 : 40;
+      const availableWidth = Math.max(300, vpWidth - reservedRight - 50);
+      const availableHeight = Math.max(300, vpHeight - 60);
+
+      const scaleX = availableWidth / (graphWidth + 60);
+      const scaleY = availableHeight / (graphHeight + 60);
+      let calculatedZoom = Math.min(scaleX, scaleY, 0.95);
+      calculatedZoom = Math.max(0.65, Math.min(calculatedZoom, 1.05));
+      zoom = Math.round(calculatedZoom * 100) / 100;
+
+      const graphCenterX = minX + graphWidth / 2;
+      const graphCenterY = minY + graphHeight / 2;
+
+      // Target center of available viewport
+      const targetCenterX = 40 + availableWidth / 2;
+      const targetCenterY = vpHeight / 2;
+
+      panX = Math.round(targetCenterX - graphCenterX * zoom);
+      panY = Math.round(targetCenterY - graphCenterY * zoom);
+
+      updateWorldTransform();
+      redrawEdges();
+      if (notify) showToast('Canvas refitted to all connected nodes');
+    }
+
+    // --- Node Drag & Drop Logic ---
+    function initNodeInteractions(node) {
+      node.addEventListener('mousedown', (e) => {
+        if (isLocked || e.button !== 0) return;
+        e.stopPropagation();
+
+        draggedNode = node;
+        hasDragged = false;
+        dragStartX = e.clientX;
+        dragStartY = e.clientY;
+
+        const curX = parseFloat(node.getAttribute('data-x') || node.offsetLeft);
+        const curY = parseFloat(node.getAttribute('data-y') || node.offsetTop);
+        nodeStartX = curX;
+        nodeStartY = curY;
+
+        node.classList.add('dragging-node');
+      });
+
+      node.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          selectNode(node);
+        }
+      });
+    }
+
+    document.querySelectorAll('.flow-node').forEach(initNodeInteractions);
+
+    window.addEventListener('mousemove', (e) => {
+      if (draggedNode) {
+        const dx = (e.clientX - dragStartX) / zoom;
+        const dy = (e.clientY - dragStartY) / zoom;
+        if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+          hasDragged = true;
+        }
+        const newX = Math.round(nodeStartX + dx);
+        const newY = Math.round(nodeStartY + dy);
+
+        draggedNode.style.left = `${newX}px`;
+        draggedNode.style.top = `${newY}px`;
+        draggedNode.setAttribute('data-x', newX);
+        draggedNode.setAttribute('data-y', newY);
+
+        redrawEdges();
+      } else if (isPanning) {
+        const dx = e.clientX - panStartX;
+        const dy = e.clientY - panStartY;
+        panX += dx;
+        panY += dy;
+        panStartX = e.clientX;
+        panStartY = e.clientY;
+        updateWorldTransform();
+      }
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (draggedNode) {
+        const releasedNode = draggedNode;
+        draggedNode.classList.remove('dragging-node');
+        draggedNode = null;
+        if (!hasDragged) {
+          selectNode(releasedNode);
+        }
+      }
+      if (isPanning) {
+        isPanning = false;
+        viewport.classList.remove('canvas-panning');
+      }
+    });
+
+    // Canvas Background Panning
+    viewport.addEventListener('mousedown', (e) => {
+      if (isLocked) return;
+      if (e.target.closest('.flow-node') || e.target.closest('#ctrl-export') || e.target.closest('#node-inspector-drawer') || e.target.closest('button')) {
+        return;
+      }
+      isPanning = true;
+      panStartX = e.clientX;
+      panStartY = e.clientY;
+      viewport.classList.add('canvas-panning');
+      deselectNode();
+    });
+
+    // --- Zoom & Canvas Controls ---
+    document.getElementById('ctrl-zoom-in').addEventListener('click', () => {
+      if (zoom < 1.6) {
+        zoom = Math.round((zoom + 0.1) * 100) / 100;
+        updateWorldTransform();
+      }
+    });
+
+    document.getElementById('ctrl-zoom-out').addEventListener('click', () => {
+      if (zoom > 0.45) {
+        zoom = Math.round((zoom - 0.1) * 100) / 100;
+        updateWorldTransform();
+      }
+    });
+
+    document.getElementById('ctrl-fit').addEventListener('click', () => fitView(true));
+
+    // Canvas Lock
+    const lockBtn = document.getElementById('ctrl-lock');
+    lockBtn.addEventListener('click', () => {
+      isLocked = !isLocked;
+      if (isLocked) {
+        lockIcon.textContent = 'lock';
+        viewport.classList.add('cursor-not-allowed');
+        viewport.classList.remove('cursor-grab');
+        showToast('Canvas locked. Node dragging and panning disabled.');
+      } else {
+        lockIcon.textContent = 'lock_open';
+        viewport.classList.remove('cursor-not-allowed');
+        viewport.classList.add('cursor-grab');
+        showToast('Canvas unlocked');
+      }
+    });
+
+    // Export SVG
+    document.getElementById('ctrl-export').addEventListener('click', () => {
+      showToast('Exported SVG graph snapshot to clipboard / FHIR observation bundle ready');
+      const exportText = document.getElementById('export-text');
+      exportText.textContent = 'Copied!';
+      setTimeout(() => {
+        exportText.textContent = 'Export SVG';
+      }, 1800);
+    });
+
+    // Quick Command copy
+    document.getElementById('copy-npm-btn').addEventListener('click', () => {
+      navigator.clipboard.writeText('npm install @behavioral-health/flow').then(() => {
+        showToast('NPM install package command copied');
+      });
+    });
+
+    // --- Interactive Category Filters ---
+    const filterPills = document.querySelectorAll('.filter-pill');
+    function applyFilter(filter) {
+      activeFilter = filter;
+      filterPills.forEach(btn => {
+        if (btn.getAttribute('data-filter') === filter) {
+          btn.classList.add('bg-primary', 'text-on-primary', 'active');
+          btn.classList.remove('bg-surface-container', 'text-secondary');
+        } else {
+          btn.classList.remove('bg-primary', 'text-on-primary', 'active');
+          btn.classList.add('bg-surface-container', 'text-secondary');
+        }
+      });
+
+      const nodes = document.querySelectorAll('.flow-node');
+      nodes.forEach(node => {
+        const type = node.getAttribute('data-node-type');
+        if (filter === 'all' || type === filter) {
+          node.classList.remove('node-dimmed');
+          if (filter !== 'all') {
+            node.classList.add('node-highlight');
+          } else {
+            node.classList.remove('node-highlight');
+          }
+        } else {
+          node.classList.remove('node-highlight');
+          node.classList.add('node-dimmed');
+        }
+      });
+    }
+
+    filterPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        applyFilter(pill.getAttribute('data-filter'));
+      });
+    });
+
+    // --- Live Node Selection & Inspector Drawer ---
+    const drawerTitle = document.getElementById('drawer-title');
+    const drawerBadge = document.getElementById('drawer-badge');
+    const drawerDot = document.getElementById('drawer-dot');
+    const drawerTaxonomy = document.getElementById('drawer-taxonomy');
+    const drawerDate = document.getElementById('drawer-date');
+    const drawerMeta = document.getElementById('drawer-meta');
+    const drawerLinksContainer = document.getElementById('drawer-links-container');
+    const statusButtons = document.querySelectorAll('#drawer-status-buttons .status-btn');
+
+    function selectNode(node) {
+      document.querySelectorAll('.flow-node').forEach(n => {
+        n.classList.remove('ring-2', 'ring-primary', 'shadow-lg');
+      });
+
+      node.classList.add('ring-2', 'ring-primary', 'shadow-lg');
+      selectedNodeId = node.getAttribute('data-id');
+
+      const name = node.getAttribute('data-name') || node.getAttribute('data-relation') || node.getAttribute('data-title') || 'Clinical Node';
+      const nodeType = node.getAttribute('data-node-type') || 'clinical';
+      const taxonomy = node.getAttribute('data-taxonomy') || 'LOINC / SNOMED Active';
+      const date = node.getAttribute('data-date') || 'Continuous';
+      const meta = node.getAttribute('data-code') || node.getAttribute('data-dosage') || node.getAttribute('data-condition') || ('Score: ' + node.getAttribute('data-score')) || 'Observation';
+      const status = node.getAttribute('data-status') || 'Active Care';
+
+      drawerTitle.textContent = name;
+      drawerBadge.textContent = `${nodeType.toUpperCase()} Node`;
+      drawerTaxonomy.textContent = taxonomy;
+      drawerDate.textContent = date;
+      drawerMeta.textContent = meta;
+
+      // Color mapping for drawer dot
+      const colorMap = {
+        patient: '#003743',
+        family: '#545F6C',
+        diagnosis: '#1F4E5B',
+        medication: '#0D9488',
+        therapy: '#8E7DBE',
+        assessment: '#2563EB',
+        event: '#DC2626'
+      };
+      drawerDot.style.backgroundColor = colorMap[nodeType] || '#1F4E5B';
+
+      // Update status buttons
+      statusButtons.forEach(btn => {
+        if (btn.getAttribute('data-status') === status) {
+          btn.className = 'status-btn text-[11px] py-0.5 rounded font-medium transition-colors bg-surface-card text-primary shadow-sm font-semibold';
+        } else {
+          btn.className = 'status-btn text-[11px] py-0.5 rounded font-medium transition-colors text-secondary hover:text-on-surface';
+        }
+      });
+
+      // Populate Links
+      drawerLinksContainer.innerHTML = '';
+      const relatedEdges = edgeDefinitions.filter(e => e.from === selectedNodeId || e.to === selectedNodeId);
+      if (relatedEdges.length === 0) {
+        drawerLinksContainer.innerHTML = '<span class="text-secondary italic">No linked nodes registered.</span>';
+      } else {
+        relatedEdges.forEach(e => {
+          const otherId = e.from === selectedNodeId ? e.to : e.from;
+          const otherNode = document.querySelector(`[data-id="${otherId}"]`);
+          const otherName = otherNode ? (otherNode.getAttribute('data-name') || otherNode.getAttribute('data-relation') || otherNode.getAttribute('data-title')) : otherId;
+          const dir = e.from === selectedNodeId ? '→' : '←';
+
+          const item = document.createElement('div');
+          item.className = 'flex items-center justify-between p-1 rounded bg-surface-container hover:bg-surface-container-high cursor-pointer transition-colors';
+          item.innerHTML = `
+            <span class="text-on-surface truncate flex items-center gap-1 font-medium"><span class="text-secondary">${dir}</span> ${otherName}</span>
+            <span class="text-secondary text-[10px] shrink-0 font-mono">${e.label}</span>
+          `;
+          item.addEventListener('click', (ev) => {
+            ev.stopPropagation();
+            if (otherNode) selectNode(otherNode);
+          });
+          drawerLinksContainer.appendChild(item);
+        });
+      }
+
+      inspector.classList.remove('translate-x-[115%]');
+    }
+
+    function deselectNode() {
+      selectedNodeId = null;
+      document.querySelectorAll('.flow-node').forEach(n => {
+        n.classList.remove('ring-2', 'ring-primary', 'shadow-lg');
+      });
+      inspector.classList.add('translate-x-[115%]');
+    }
+
+    document.getElementById('btn-close-inspector').addEventListener('click', deselectNode);
+
+    // Status toggle in drawer
+    statusButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (!selectedNodeId) return;
+        const newStatus = btn.getAttribute('data-status');
+        const node = document.querySelector(`[data-id="${selectedNodeId}"]`);
+        if (node) {
+          node.setAttribute('data-status', newStatus);
+          const pill = document.querySelector(`[data-status-pill="${selectedNodeId}"]`);
+          if (pill) {
+            pill.textContent = newStatus;
+            if (newStatus === 'Active Care') {
+              pill.className = 'font-label-sm text-[11px] px-1.5 py-0.5 rounded bg-indicator-stable-subtle text-indicator-stable font-semibold';
+            } else if (newStatus === 'Monitored') {
+              pill.className = 'font-label-sm text-[11px] px-1.5 py-0.5 rounded bg-indicator-warning-subtle text-indicator-warning font-semibold';
+            } else {
+              pill.className = 'font-label-sm text-[11px] px-1.5 py-0.5 rounded bg-surface-container text-secondary font-semibold';
+            }
+          }
+          statusButtons.forEach(b => {
+            if (b === btn) {
+              b.className = 'status-btn text-[11px] py-0.5 rounded font-medium transition-colors bg-surface-card text-primary shadow-sm font-semibold';
+            } else {
+              b.className = 'status-btn text-[11px] py-0.5 rounded font-medium transition-colors text-secondary hover:text-on-surface';
+            }
+          });
+          showToast(`Status updated to ${newStatus}`);
+        }
+      });
+    });
+
+    // Drawer action buttons
+    document.getElementById('btn-focus-subgraph').addEventListener('click', () => {
+      if (!selectedNodeId) return;
+      const node = document.querySelector(`[data-id="${selectedNodeId}"]`);
+      if (node) {
+        const x = parseFloat(node.getAttribute('data-x') || node.offsetLeft);
+        const y = parseFloat(node.getAttribute('data-y') || node.offsetTop);
+        panX = Math.round(300 - x);
+        panY = Math.round(200 - y);
+        zoom = 1.05;
+        updateWorldTransform();
+        showToast(`Focused on sub-graph centered at ${drawerTitle.textContent}`);
+      }
+    });
+
+    document.getElementById('btn-add-connected-note').addEventListener('click', () => {
+      showToast(`Clinical note timestamped and bound to ${drawerTitle.textContent}`);
+    });
+
+    // --- Dynamic "+ Add Clinical Node" Functionality ---
+    let newNodeCount = 1;
+    document.getElementById('btn-add-quick-node').addEventListener('click', () => {
+      const newNodeId = `quick-node-${newNodeCount++}`;
+      const newNode = document.createElement('div');
+      newNode.className = 'flow-node cursor-grab active:cursor-grabbing absolute w-[180px] bg-surface-card rounded-lg shadow-sm hover:shadow-md transition-shadow p-2.5 border border-border-subtle focus:outline-none focus:ring-2 focus:ring-primary';
+      
+      const newX = 520 + (newNodeCount * 20);
+      const newY = 410 + (newNodeCount * 12);
+      newNode.style.left = `${newX}px`;
+      newNode.style.top = `${newY}px`;
+      newNode.setAttribute('data-x', newX);
+      newNode.setAttribute('data-y', newY);
+      newNode.setAttribute('data-id', newNodeId);
+      newNode.setAttribute('data-node-type', 'assessment');
+      newNode.setAttribute('data-name', 'GAD-7 Assessment');
+      newNode.setAttribute('data-date', 'Today');
+      newNode.setAttribute('data-status', 'Active Care');
+      newNode.setAttribute('data-taxonomy', 'LOINC: 68314-3 (GAD-7)');
+      newNode.setAttribute('data-score', '9');
+      newNode.setAttribute('role', 'button');
+      newNode.setAttribute('tabindex', '0');
+
+      newNode.innerHTML = `
+        <div class="flex items-center justify-between text-indicator-assessment">
+          <span class="font-label-sm text-[10px] uppercase tracking-wider font-semibold">Anxiety Scale</span>
+          <span class="material-symbols-outlined text-[15px]">psychology_alt</span>
+        </div>
+        <div class="flex items-baseline justify-between mt-0.5">
+          <span class="font-title-sm text-title-sm text-on-surface font-semibold">GAD-7 Scale</span>
+          <span class="font-metric-val text-metric-val text-indicator-assessment font-bold">9</span>
+        </div>
+        <div class="flex items-center justify-between mt-0.5 text-secondary font-label-sm text-[11px]">
+          <span>Mild Generalized</span>
+          <span class="font-label-sm text-[10px] px-1.5 py-0.5 rounded bg-indicator-stable-subtle text-indicator-stable font-semibold" data-status-pill="${newNodeId}">Active Care</span>
+        </div>
+      `;
+
+      nodeStage.appendChild(newNode);
+      initNodeInteractions(newNode);
+
+      // Register Edge to Patient Root
+      edgeDefinitions.push({
+        from: 'patient-root',
+        to: newNodeId,
+        color: '#2563EB',
+        dash: '3 3',
+        width: 2,
+        label: 'Anxiety Tracking'
+      });
+
+      // Update counters
+      const totalCount = document.getElementById('total-node-count');
+      totalCount.textContent = document.querySelectorAll('.flow-node').length;
+      const assessCount = document.querySelector('.filter-count[data-type="assessment"]');
+      if (assessCount) assessCount.textContent = parseInt(assessCount.textContent || '1') + 1;
+
+      redrawEdges();
+      selectNode(newNode);
+      showToast('Added GAD-7 Assessment Node connected to Patient Root');
+    });
+
+    // --- Developer API Tabs ---
+    const tabButtons = document.querySelectorAll('#api-tab-group .tab-btn');
+    const tabPanels = document.querySelectorAll('.tab-panel');
+
+    tabButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = btn.getAttribute('data-tab');
+        tabButtons.forEach(b => {
+          b.classList.remove('bg-primary', 'text-on-primary');
+          b.classList.add('bg-surface-container', 'text-secondary');
+        });
+        btn.classList.add('bg-primary', 'text-on-primary');
+        btn.classList.remove('bg-surface-container', 'text-secondary');
+
+        tabPanels.forEach(panel => {
+          if (panel.id === target) {
+            panel.classList.remove('hidden');
+          } else {
+            panel.classList.add('hidden');
+          }
+        });
+      });
+    });
+
+    // Accessible tree drawer toggle
+    const treeDrawer = document.getElementById('accessible-tree-drawer');
+    const btnTreeToggle = document.getElementById('btn-tree-toggle');
+    const btnCloseTree = document.getElementById('btn-close-tree');
+    const btnSyncFocus = document.getElementById('btn-sync-focus');
+
+    btnTreeToggle.addEventListener('click', () => {
+      treeDrawer.classList.remove('translate-x-full');
+    });
+    btnCloseTree.addEventListener('click', () => {
+      treeDrawer.classList.add('translate-x-full');
+    });
+    btnSyncFocus.addEventListener('click', () => {
+      treeDrawer.classList.add('translate-x-full');
+      const root = document.querySelector('[data-id="patient-root"]');
+      if (root) {
+        selectNode(root);
+        fitView();
+      }
+    });
+
+    // Window resize handler to maintain clean fit
+    window.addEventListener('resize', () => {
+      fitView(false);
+    });
+
+    // Initialize layout: apply responsive node positions and fit view
+    const defaultNode = document.querySelector('[data-id="diag-depression"]');
+    if (defaultNode) {
+      selectNode(defaultNode);
+    }
+    fitView(false);
+  });
+</script></main></body></html>
